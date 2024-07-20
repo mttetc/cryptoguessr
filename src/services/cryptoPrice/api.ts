@@ -1,17 +1,19 @@
-import { Crypto, Currency } from '@/services/cryptoPrice/types';
+import { ReadCryptoPriceParams } from '@/services/cryptoPrice/types';
+import { readCryptoPriceSchema } from './schemas';
+import { ZodError } from 'zod';
 
-type ReadCryptoPriceProps = {
-  crypto?: Crypto[];
-  currency?: Currency;
-};
+export const readCryptoPrice = async (params: ReadCryptoPriceParams) => {
+  const symbol = `${params.crypto}${params.currency === 'USD' ? 'USDT' : params.currency}`;
+  const url = `https://api.binance.com/api/v3/ticker/price?symbol=${symbol}`;
 
-export const readCryptoPrice = async ({
-  crypto = ['bitcoin'],
-  currency = 'usd',
-}: ReadCryptoPriceProps) => {
-  const response = await fetch(
-    `https://api.coingecko.com/api/v3/simple/price?ids=${crypto.join(',')}&vs_currencies=${currency}`,
-  );
+  const response = await fetch(url);
   const data = await response.json();
-  return data.bitcoin.usd;
+
+  const parsedRes = readCryptoPriceSchema.safeParse(data);
+
+  if (parsedRes.error) {
+    return ZodError.create(parsedRes.error.errors);
+  }
+
+  return data.price;
 };

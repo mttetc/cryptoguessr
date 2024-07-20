@@ -1,22 +1,26 @@
 import { z } from 'zod';
 
 export const currencySchema = z.union([
-  z.literal('usd'),
-  z.literal('eur'),
-  z.literal('gbp'),
-  z.literal('jpy'),
-  z.literal('cny'),
+  z.literal('USD'),
+  z.literal('EUR'),
+  z.literal('GBP'),
+  z.literal('JPY'),
+  z.literal('AUD'),
 ]);
 
 export const cryptoSchema = z.union([
-  z.literal('bitcoin'),
-  z.literal('ethereum'),
-  z.literal('dogecoin'),
-  z.literal('ripple'),
-  z.literal('litecoin'),
-  z.literal('cardano'),
+  z.literal('BTC'),
+  z.literal('ETH'),
+  z.literal('DOGE'),
+  z.literal('BNB'),
+  z.literal('ADA'),
 ]);
 
-const priceSchema = z.record(currencySchema, z.number());
-
-export const readCryptoPriceSchema = z.record(cryptoSchema, priceSchema);
+export const readCryptoPriceParamsSchema = z.object({
+  crypto: cryptoSchema,
+  currency: currencySchema,
+});
+export const readCryptoPriceSchema = z.object({
+  price: z.string(),
+  symbol: z.string(),
+});

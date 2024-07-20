@@ -1,25 +1,24 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import { cryptoPriceKeys } from './queryKeys';
 import { readCryptoPrice } from './api';
-import { Currency, Crypto, ReadCryptoPrice } from './types';
+import { cryptoPriceKeys } from './queryKeys';
+import { ReadCryptoPriceParams } from './types';
 
-type useReadBitcoinPriceProps<TContext = unknown> = {
+type useReadBitcoinPriceProps = {
   options?: Omit<
-    UseQueryOptions<ReadCryptoPrice, Error, TContext>,
+    UseQueryOptions<number, Error, number>,
     'queryFn' | 'queryKey'
   >;
-  crypto?: Crypto[];
-  currency?: Currency;
+  params: ReadCryptoPriceParams;
 };
 
-export const useReadCryptoPrice = <TContext = unknown>({
+export const useReadCryptoPrice = ({
   options,
-  crypto = ['bitcoin'],
-  currency = 'usd',
-}: useReadBitcoinPriceProps<TContext>) => {
-  return useQuery<ReadCryptoPrice, Error, TContext>({
-    queryFn: () => readCryptoPrice({ crypto, currency }),
-    queryKey: cryptoPriceKeys.list({ crypto, currency }),
+  params,
+}: useReadBitcoinPriceProps) => {
+  return useQuery<number, Error, number>({
+    queryFn: () => readCryptoPrice(params),
+    queryKey: cryptoPriceKeys.list(params),
+    retry: false,
     ...options,
   });
 };
