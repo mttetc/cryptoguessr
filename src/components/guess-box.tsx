@@ -1,10 +1,9 @@
-import { useRef } from 'react';
+import useStore from '@/store';
+import { motion } from 'framer-motion';
 import Countdown from './countdown';
 import CryptoDisplay from './crypto-display';
 import GuessButtons from './guess-buttons';
 import Score from './score';
-import useStore from '@/store';
-import { motion } from 'framer-motion';
 
 export type CountdownComponent = {
   triggerGuess: (direction: 'up' | 'down') => void;
@@ -12,13 +11,6 @@ export type CountdownComponent = {
 
 const GuessBox = () => {
   const { selectedCrypto } = useStore();
-  const countdownRef = useRef<CountdownComponent | null>(null);
-
-  const handleGuess = (direction: 'up' | 'down') => {
-    if (countdownRef.current) {
-      countdownRef.current.triggerGuess(direction);
-    }
-  };
 
   return (
     <motion.div
@@ -37,8 +29,8 @@ const GuessBox = () => {
         </p>
       </div>
       <div className="flex flex-col items-center justify-center gap-4">
-        <GuessButtons onGuess={handleGuess} />
-        <Countdown ref={countdownRef} />
+        <GuessButtons />
+        <Countdown />
       </div>
     </motion.div>
   );

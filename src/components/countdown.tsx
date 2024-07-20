@@ -1,23 +1,10 @@
-import useCountdown from '@/hooks/useCountdown';
-import useStore from '@/store';
+import { useCountdownValue } from '@/hooks/useCountdownValue';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Clock } from 'lucide-react';
-import { forwardRef, useImperativeHandle } from 'react';
-import { CountdownComponent } from './guess-box';
 
-const Countdown = forwardRef<CountdownComponent | null, unknown>((_, ref) => {
-  const { selectedCrypto, selectedCurrency } = useStore();
-  const { countdown, onStartCountdown } = useCountdown({
-    crypto: selectedCrypto,
-    currency: selectedCurrency,
-  });
+const Countdown = () => {
+  const countdown = useCountdownValue();
   const isCountdownVisible = countdown > 0;
-
-  useImperativeHandle(ref, () => ({
-    triggerGuess: direction => {
-      onStartCountdown(direction);
-    },
-  }));
 
   return (
     <AnimatePresence>
@@ -35,7 +22,6 @@ const Countdown = forwardRef<CountdownComponent | null, unknown>((_, ref) => {
       )}
     </AnimatePresence>
   );
-});
+};
 
-Countdown.displayName = 'Countdown';
 export default Countdown;

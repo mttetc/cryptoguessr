@@ -15,5 +15,5 @@ export const readCryptoPrice = async (params: ReadCryptoPriceParams) => {
     return ZodError.create(parsedRes.error.errors);
   }
 
-  return data.price;
+  return parseInt(parsedRes.data.price, 10);
 };

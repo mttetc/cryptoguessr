@@ -1,18 +1,24 @@
+import { useStartCountdown } from '@/hooks/useStartCountdown';
 import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react';
 import { ComponentPropsWithoutRef } from 'react';
 import { Button } from './ui/button';
+import { useQueryClient } from '@tanstack/react-query';
 
-type GuessButtonsProps = {
-  onGuess: (direction: 'up' | 'down') => void;
-} & ComponentPropsWithoutRef<'div'>;
+const GuessButtons = (props: ComponentPropsWithoutRef<'div'>) => {
+  const queryClient = useQueryClient();
+  const { isActive, startCountdown } = useStartCountdown();
 
-const GuessButtons = ({ onGuess, ...restProps }: GuessButtonsProps) => {
+  const handleStartCountdown = (direction: 'up' | 'down') => {
+    startCountdown({ queryClient, direction });
+  };
+
   return (
-    <div className="flex justify-center gap-2" {...restProps}>
+    <div className="flex justify-center gap-2" {...props}>
       <Button
         variant="outline"
         className="w-24 flex gap-1 rounded-l-lg border-[#F7931A] text-[#F7931A] hover:bg-[#F7931A] hover:text-white"
-        onClick={() => onGuess('up')}
+        onClick={() => handleStartCountdown('up')}
+        disabled={isActive}
       >
         <ArrowUpIcon size={14} />
         Up
@@ -20,7 +26,8 @@ const GuessButtons = ({ onGuess, ...restProps }: GuessButtonsProps) => {
       <Button
         variant="outline"
         className="w-24 flex gap-1 rounded-r-lg border-[#7B61FF] text-[#7B61FF] hover:bg-[#7B61FF] hover:text-white"
-        onClick={() => onGuess('down')}
+        onClick={() => handleStartCountdown('down')}
+        disabled={isActive}
       >
         <ArrowDownIcon size={14} />
         Down

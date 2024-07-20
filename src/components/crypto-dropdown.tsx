@@ -16,6 +16,7 @@ const CryptoDropdown = (props: DropdownMenuProps) => {
   const handleSelectCrypto = (crypto: Crypto) => () => {
     setSelectedCrypto(crypto);
   };
+
   return (
     <DropdownMenu {...props}>
       <DropdownMenuTrigger asChild>
