@@ -1,6 +1,4 @@
 import { Moon, Sun } from 'lucide-react';
-
-import { useTheme } from '@/components/theme-provider';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -8,28 +6,33 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import useStore from '@/store';
 import { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
 
 const ModeToggle = (props: DropdownMenuProps) => {
-  const { setTheme } = useTheme();
+  const { setTheme } = useStore();
+
+  const handleSelectTheme = (theme: 'light' | 'dark' | 'system') => () => {
+    setTheme(theme);
+  };
 
   return (
     <DropdownMenu {...props}>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
+        <Button variant="secondary" size="icon">
           <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme('light')}>
+        <DropdownMenuItem onClick={handleSelectTheme('light')}>
           Light
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('dark')}>
+        <DropdownMenuItem onClick={handleSelectTheme('dark')}>
           Dark
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('system')}>
+        <DropdownMenuItem onClick={handleSelectTheme('system')}>
           System
         </DropdownMenuItem>
       </DropdownMenuContent>

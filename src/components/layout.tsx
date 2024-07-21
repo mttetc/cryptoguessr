@@ -1,5 +1,5 @@
 import { ComponentPropsWithoutRef } from 'react';
-import ModeToggle from '@/components/mode-toggle';
+import Header from '@/components/header';
 
 const Layout = ({
   children,
@@ -7,13 +7,11 @@ const Layout = ({
 }: ComponentPropsWithoutRef<'div'>) => {
   return (
     <div
-      className="flex flex-col justify-center items-center h-screen bg-gradient-to-br from-[#1C1F2E] to-[#2D3142]"
+      className="flex flex-col h-screen bg-background text-foreground"
       {...restProps}
     >
-      <div className="absolute right-2 top-2">
-        <ModeToggle />
-      </div>
-      {children}
+      <Header />
+      <div className="flex-1 flex justify-center">{children}</div>
     </div>
   );
 };

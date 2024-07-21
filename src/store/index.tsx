@@ -5,6 +5,8 @@ import { QueryClient } from '@tanstack/react-query';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
+type Theme = 'dark' | 'light' | 'system';
+
 type StoreProps = {
   price: number;
   score: number;
@@ -22,6 +24,8 @@ type StoreProps = {
     direction: 'up' | 'down';
     queryClient: QueryClient;
   }) => void;
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
 };
 
 const useStore = create<StoreProps>()(
@@ -34,6 +38,10 @@ const useStore = create<StoreProps>()(
       setSelectedCrypto: crypto => set({ selectedCrypto: crypto }),
       score: 0,
       setScore: score => set({ score }),
+      theme: 'system',
+      setTheme: theme => {
+        set({ theme });
+      },
       countdown: 0,
       isCountdownActive: false,
       startCountdown: ({ queryClient, direction }) => {
@@ -42,7 +50,7 @@ const useStore = create<StoreProps>()(
         const interval = setInterval(async () => {
           const state = get();
 
-          if (state.countdown === 1) {
+          if (state.countdown === 0) {
             clearInterval(interval);
 
             await queryClient.invalidateQueries({
@@ -87,8 +95,8 @@ const useStore = create<StoreProps>()(
       name: 'crypto-guessr-store',
       storage: createJSONStorage(() => localStorage),
       partialize: state => {
-        const { price, score, selectedCurrency, selectedCrypto } = state;
-        return { price, score, selectedCurrency, selectedCrypto };
+        const { price, theme, score, selectedCurrency, selectedCrypto } = state;
+        return { price, theme, score, selectedCurrency, selectedCrypto };
       },
     },
   ),

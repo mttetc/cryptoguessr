@@ -4,6 +4,7 @@ import Countdown from './countdown';
 import CryptoDisplay from './crypto-display';
 import GuessButtons from './guess-buttons';
 import Score from './score';
+import ResetScoreButton from './reset-score-button';
 
 export type CountdownComponent = {
   triggerGuess: (direction: 'up' | 'down') => void;
@@ -17,20 +18,25 @@ const GuessBox = () => {
       initial={{ opacity: 0, transform: 'translateY(-10px)' }}
       animate={{ opacity: 1, transform: 'translateY(0)' }}
       transition={{ duration: 0.5 }}
-      className="bg-[#2D3142] rounded-lg shadow-lg p-8 w-full max-w-md"
+      className="self-center rounded-lg border bg-card text-card-foreground py-6 px-8 w-[400px]"
     >
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex items-center justify-between gap-4">
         <CryptoDisplay />
-        <Score />
+        <div className="flex items-center gap-4">
+          <Score />
+          <ResetScoreButton />
+        </div>
       </div>
-      <div className="text-center mb-6">
-        <p className="text-white font-['Playfair_Display', 'serif']">
-          Will {selectedCrypto} price go up or down? Take your guess!
+      <div className="py-6 flex flex-col gap-6">
+        <p className="text-lg text-muted-foreground font-light text-center">
+          Will {selectedCrypto} price go up or down?
+          <br />
+          Take your guess!
         </p>
-      </div>
-      <div className="flex flex-col items-center justify-center gap-4">
-        <GuessButtons />
-        <Countdown />
+        <div className="flex flex-col items-center justify-center gap-4">
+          <GuessButtons />
+          <Countdown />
+        </div>
       </div>
     </motion.div>
   );

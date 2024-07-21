@@ -15,8 +15,8 @@ const GuessButtons = (props: ComponentPropsWithoutRef<'div'>) => {
   return (
     <div className="flex justify-center gap-2" {...props}>
       <Button
-        variant="outline"
-        className="w-24 flex gap-1 rounded-l-lg border-[#F7931A] text-[#F7931A] hover:bg-[#F7931A] hover:text-white"
+        variant="default"
+        className="w-24 flex gap-1"
         onClick={() => handleStartCountdown('up')}
         disabled={isActive}
       >
@@ -24,8 +24,8 @@ const GuessButtons = (props: ComponentPropsWithoutRef<'div'>) => {
         Up
       </Button>
       <Button
-        variant="outline"
-        className="w-24 flex gap-1 rounded-r-lg border-[#7B61FF] text-[#7B61FF] hover:bg-[#7B61FF] hover:text-white"
+        variant="destructive"
+        className="w-24 flex gap-1"
         onClick={() => handleStartCountdown('down')}
         disabled={isActive}
       >
