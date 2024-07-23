@@ -16,11 +16,9 @@ const useStore = create<BoundStore>()(
       name: 'crypto-guessr-store',
       storage: createJSONStorage(() => localStorage),
       partialize: state => {
-        const { anonymousId, price, theme, selectedCurrency, selectedCrypto } =
-          state;
+        const { anonymousId, theme, selectedCurrency, selectedCrypto } = state;
         return {
           anonymousId,
-          price,
           theme,
           selectedCurrency,
           selectedCrypto,
