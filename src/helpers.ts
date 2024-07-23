@@ -12,3 +12,33 @@ export const formatCurrency = (
   });
   return formatter.format(amount);
 };
+
+export const getNewScore = ({
+  direction,
+  updatedPrice,
+  price,
+  currentScore,
+}: {
+  direction: 'up' | 'down';
+  updatedPrice: number;
+  price: number;
+  currentScore: number;
+}) => {
+  let scoreChange = 0;
+
+  if (direction === 'down') {
+    if (updatedPrice < price) {
+      scoreChange = 1;
+    } else {
+      scoreChange = -1;
+    }
+  }
+  if (updatedPrice > price) {
+    scoreChange = 1;
+  } else {
+    scoreChange = -1;
+  }
+
+  const newScore = currentScore + scoreChange;
+  return Math.max(0, newScore);
+};

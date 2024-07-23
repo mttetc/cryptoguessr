@@ -11,7 +11,7 @@ export type CountdownComponent = {
 };
 
 const GuessBox = () => {
-  const { selectedCrypto } = useStore();
+  const { selectedCrypto, anonymousId } = useStore();
 
   return (
     <motion.div
@@ -24,7 +24,7 @@ const GuessBox = () => {
         <CryptoDisplay />
         <div className="flex items-center gap-4">
           <Score />
-          <ResetScoreButton />
+          {anonymousId && <ResetScoreButton anonymousId={anonymousId} />}
         </div>
       </div>
       <div className="py-6 flex flex-col gap-6">

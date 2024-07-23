@@ -3,6 +3,7 @@ import { motion, Variants } from 'framer-motion';
 import { TrophyIcon } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import usePrevious from '@/hooks/usePrevious';
+import { useReadScore } from '@/services/scores/hooks';
 
 const animationVariants: Variants = {
   animate: { scale: [1, 1.4, 1], transition: { duration: 0.4 } },
@@ -10,7 +11,9 @@ const animationVariants: Variants = {
 };
 
 const Score = () => {
-  const { score } = useStore();
+  const anonymousId = useStore(state => state.anonymousId);
+  const { data: score = 0 } = useReadScore(anonymousId);
+
   const previousScore = usePrevious(score);
   const isAnimationTriggered =
     previousScore !== undefined && previousScore !== score;

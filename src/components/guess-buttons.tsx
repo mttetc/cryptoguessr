@@ -1,15 +1,15 @@
-import { useStartCountdown } from '@/hooks/useStartCountdown';
+import useInitCountdown from '@/hooks/useInitCountdown';
 import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react';
 import { ComponentPropsWithoutRef } from 'react';
 import { Button } from './ui/button';
-import { useQueryClient } from '@tanstack/react-query';
+import useStore from '@/store';
 
 const GuessButtons = (props: ComponentPropsWithoutRef<'div'>) => {
-  const queryClient = useQueryClient();
-  const { isActive, startCountdown } = useStartCountdown();
+  const isCountdownActive = useStore(state => state.isCountdownActive);
+  const { startCountdown } = useInitCountdown();
 
   const handleStartCountdown = (direction: 'up' | 'down') => {
-    startCountdown({ queryClient, direction });
+    startCountdown(direction);
   };
 
   return (
@@ -18,7 +18,7 @@ const GuessButtons = (props: ComponentPropsWithoutRef<'div'>) => {
         variant="default"
         className="w-24 flex gap-1"
         onClick={() => handleStartCountdown('up')}
-        disabled={isActive}
+        disabled={isCountdownActive}
       >
         <ArrowUpIcon size={14} />
         Up
@@ -27,7 +27,7 @@ const GuessButtons = (props: ComponentPropsWithoutRef<'div'>) => {
         variant="destructive"
         className="w-24 flex gap-1"
         onClick={() => handleStartCountdown('down')}
-        disabled={isActive}
+        disabled={isCountdownActive}
       >
         <ArrowDownIcon size={14} />
         Down

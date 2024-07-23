@@ -1,9 +1,9 @@
-import { useCountdownValue } from '@/hooks/useCountdownValue';
+import useStore from '@/store';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Clock } from 'lucide-react';
 
 const Countdown = () => {
-  const countdown = useCountdownValue();
+  const countdown = useStore(state => state.countdown);
   const isCountdownVisible = countdown > 0;
 
   return (

@@ -7,12 +7,12 @@ import Skeleton from './skeleton';
 
 const CryptoDisplay = (props: ComponentPropsWithoutRef<'div'>) => {
   const { selectedCrypto, selectedCurrency } = useStore();
-  const { data: cryptoPrice, isLoading } = useReadCryptoPrice({
+  const { data: cryptoPrice = 0, isLoading } = useReadCryptoPrice({
     params: { crypto: selectedCrypto, currency: selectedCurrency },
   });
 
   const IconComponent = CRYPTO_ICONS_MAPPING[selectedCrypto];
-  const formattedPrice = formatCurrency(Number(cryptoPrice), selectedCurrency);
+  const formattedPrice = formatCurrency(cryptoPrice, selectedCurrency);
 
   return (
     <div className="flex items-center gap-2" {...props}>
