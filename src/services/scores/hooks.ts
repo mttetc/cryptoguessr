@@ -10,7 +10,6 @@ import { scoresKeys } from './queryKeys';
 import {
   CreateScorePayload,
   CreateScoreResponse,
-  ReadScoreResponse,
   UpdateScorePayload,
   UpdateScoreResponse,
 } from './types';
@@ -24,7 +23,7 @@ export const useReadScore = (
 ) => {
   return useQuery<number, Error, number>({
     queryFn: () => readScore(id!),
-    queryKey: scoresKeys.list(id!),
+    queryKey: scoresKeys.list({ id: id! }),
     retry: false,
     refetchOnWindowFocus: false,
     ...options,
@@ -44,9 +43,9 @@ export const useCreateScore = (
     mutationFn: createScore,
     ...options,
     onSettled: async (...args) => {
-      const { id, score } = args[2];
+      const { id } = args[2];
       queryClient.invalidateQueries({
-        queryKey: scoresKeys.list(id, score),
+        queryKey: scoresKeys.list({ id }),
       });
       if (options?.onSettled) await options.onSettled(...args);
     },
@@ -64,32 +63,10 @@ export const useUpdateScore = (
   return useMutation<UpdateScoreResponse, Error, UpdateScorePayload>({
     mutationFn: updateScore,
     ...options,
-    onError: (_, { id, score }, context) => {
-      queryClient.setQueryData(scoresKeys.list(id, score), context);
-    },
-    onMutate: async ({ id, score }) => {
-      await queryClient.cancelQueries({
-        queryKey: scoresKeys.list(id, score),
-      });
-
-      const previousScore = queryClient.getQueryData<
-        ReadScoreResponse | undefined
-      >(scoresKeys.list(id, score));
-
-      queryClient.setQueryData<ReadScoreResponse | undefined>(
-        scoresKeys.list(id, score),
-        old => {
-          if (!old) return old;
-          return { id, score };
-        },
-      );
-
-      return { previousScore };
-    },
     onSettled: async (...args) => {
-      const { id, score } = args[2];
+      const { id } = args[2];
       queryClient.invalidateQueries({
-        queryKey: scoresKeys.list(id, score),
+        queryKey: scoresKeys.list({ id }),
       });
       if (options?.onSettled) await options.onSettled(...args);
     },

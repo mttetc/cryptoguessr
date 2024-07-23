@@ -4,8 +4,6 @@ import { StateCreator } from 'zustand';
 export type MainSlice = {
   anonymousId: string | undefined;
   setAnonymousId: (id: string) => void;
-  price: number;
-  setPrice: (price: number) => void;
   selectedCurrency: Currency;
   setSelectedCurrency: (currency: Currency) => void;
   selectedCrypto: Crypto;
@@ -20,8 +18,6 @@ export const createMainSlice: StateCreator<
 > = set => ({
   anonymousId: undefined,
   setAnonymousId: id => set({ anonymousId: id }),
-  price: 0,
-  setPrice: price => set({ price }),
   selectedCurrency: 'USD',
   selectedCrypto: 'BTC',
   setSelectedCurrency: currency => set({ selectedCurrency: currency }),

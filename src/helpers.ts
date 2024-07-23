@@ -26,14 +26,10 @@ export const getNewScore = ({
 }) => {
   let scoreChange = 0;
 
-  if (direction === 'down') {
-    if (updatedPrice < price) {
-      scoreChange = 1;
-    } else {
-      scoreChange = -1;
-    }
-  }
-  if (updatedPrice > price) {
+  if (
+    (direction === 'down' && updatedPrice < price) ||
+    (direction === 'up' && updatedPrice > price)
+  ) {
     scoreChange = 1;
   } else {
     scoreChange = -1;

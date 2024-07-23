@@ -1,5 +1,8 @@
 export const scoresKeys = {
-  all: ['cryptoPrice'],
-  list: (id: string, score?: number) => [...scoresKeys.lists(), id, score],
+  all: ['score'],
+  list: (payload: { id: string; score?: number }) => [
+    ...scoresKeys.lists(),
+    { ...payload },
+  ],
   lists: () => [...scoresKeys.all, 'list'],
 };

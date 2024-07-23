@@ -1,23 +1,25 @@
-import useInitCountdown from '@/hooks/useInitCountdown';
+import useStore from '@/store';
 import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react';
 import { ComponentPropsWithoutRef } from 'react';
 import { Button } from './ui/button';
-import useStore from '@/store';
 
-const GuessButtons = (props: ComponentPropsWithoutRef<'div'>) => {
+type GuessBoxButtonsProps = {
+  onGuess: (direction: 'up' | 'down') => void;
+} & ComponentPropsWithoutRef<'div'>;
+
+const GuessBoxButtons = ({ onGuess, ...restProps }: GuessBoxButtonsProps) => {
   const isCountdownActive = useStore(state => state.isCountdownActive);
-  const { startCountdown } = useInitCountdown();
 
-  const handleStartCountdown = (direction: 'up' | 'down') => {
-    startCountdown(direction);
+  const handleGuess = (direction: 'up' | 'down') => () => {
+    onGuess(direction);
   };
 
   return (
-    <div className="flex justify-center gap-2" {...props}>
+    <div className="flex justify-center gap-2" {...restProps}>
       <Button
         variant="default"
         className="w-24 flex gap-1"
-        onClick={() => handleStartCountdown('up')}
+        onClick={handleGuess('up')}
         disabled={isCountdownActive}
       >
         <ArrowUpIcon size={14} />
@@ -26,7 +28,7 @@ const GuessButtons = (props: ComponentPropsWithoutRef<'div'>) => {
       <Button
         variant="destructive"
         className="w-24 flex gap-1"
-        onClick={() => handleStartCountdown('down')}
+        onClick={handleGuess('down')}
         disabled={isCountdownActive}
       >
         <ArrowDownIcon size={14} />
@@ -36,4 +38,4 @@ const GuessButtons = (props: ComponentPropsWithoutRef<'div'>) => {
   );
 };
 
-export default GuessButtons;
+export default GuessBoxButtons;

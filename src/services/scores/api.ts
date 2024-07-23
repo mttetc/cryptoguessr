@@ -54,7 +54,7 @@ export const updateScore = async (payload: UpdateScorePayload) => {
   const url = `${import.meta.env.VITE_AWS_SCORES_ENDPOINT!}/${payload.id}`;
 
   const response = await fetch(url, {
-    method: 'PUT',
+    method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
     },
