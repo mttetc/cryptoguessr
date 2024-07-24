@@ -1,5 +1,8 @@
+import { QueryClient } from '@tanstack/react-query';
 import { CURRENCY_TO_LOCALE_MAPPING } from './consts';
-import { Currency } from './services/cryptoPrice/types';
+import { Crypto, Currency } from './services/cryptoPrice/types';
+import { cryptoPriceKeys } from './services/cryptoPrice/queryKeys';
+import { toast } from 'sonner';
 
 export const formatCurrency = (
   amount: number,
@@ -37,4 +40,60 @@ export const getNewScore = ({
 
   const newScore = currentScore + scoreChange;
   return Math.max(0, newScore);
+};
+
+export const invalidateCryptoPrices = async ({
+  queryClient,
+  selectedCrypto,
+  selectedCurrency,
+}: {
+  queryClient: QueryClient;
+  selectedCrypto: Crypto;
+  selectedCurrency: Currency;
+}) => {
+  await queryClient.invalidateQueries({
+    queryKey: cryptoPriceKeys.list({
+      crypto: selectedCrypto,
+      currency: selectedCurrency,
+    }),
+  });
+};
+
+export const getCryptoPrice = ({
+  queryClient,
+  selectedCrypto,
+  selectedCurrency,
+}: {
+  queryClient: QueryClient;
+  selectedCrypto: Crypto;
+  selectedCurrency: Currency;
+}) => {
+  return (
+    queryClient.getQueryData<number>(
+      cryptoPriceKeys.list({
+        crypto: selectedCrypto,
+        currency: selectedCurrency,
+      }),
+    ) ?? 0
+  );
+};
+
+export const getConfirmationToast = ({
+  previousScore,
+  newScore,
+}: {
+  previousScore: number;
+  newScore: number;
+}) => {
+  if (previousScore >= newScore) {
+    toast.error('Too bad!', {
+      position: 'bottom-center',
+      description: "You guessed wrong, but don't worry, you can try again!",
+    });
+    return;
+  }
+  toast.success('Nice!', {
+    position: 'bottom-center',
+    description: 'You guessed right, keep it up!',
+  });
 };

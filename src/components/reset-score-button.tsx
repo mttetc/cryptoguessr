@@ -14,10 +14,10 @@ type ResetScoreButtonProps = {
 };
 
 const ResetScoreButton = ({ anonymousId }: ResetScoreButtonProps) => {
-  const { data: score = 0 } = useReadScore(anonymousId);
+  const { data = { score: 0 } } = useReadScore(anonymousId);
   const { mutate: updateScore } = useUpdateScore();
 
-  const isButtonVisible = score > 0;
+  const isButtonVisible = data.score > 0;
 
   const handleReset = () => {
     updateScore({ id: anonymousId, score: 0 });

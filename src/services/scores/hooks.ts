@@ -10,6 +10,7 @@ import { scoresKeys } from './queryKeys';
 import {
   CreateScorePayload,
   CreateScoreResponse,
+  ReadScoreResponse,
   UpdateScorePayload,
   UpdateScoreResponse,
 } from './types';
@@ -17,11 +18,11 @@ import {
 export const useReadScore = (
   id: string | undefined,
   options?: Omit<
-    UseQueryOptions<number, Error, number>,
+    UseQueryOptions<ReadScoreResponse, Error, ReadScoreResponse>,
     'queryFn' | 'queryKey'
   >,
 ) => {
-  return useQuery<number, Error, number>({
+  return useQuery<ReadScoreResponse, Error, ReadScoreResponse>({
     queryFn: () => readScore(id!),
     queryKey: scoresKeys.list({ id: id! }),
     retry: false,
@@ -33,15 +34,60 @@ export const useReadScore = (
 
 export const useCreateScore = (
   options?: Omit<
-    UseMutationOptions<CreateScoreResponse, Error, CreateScorePayload>,
+    UseMutationOptions<
+      CreateScoreResponse,
+      Error,
+      CreateScorePayload,
+      CreateScoreResponse
+    >,
     'mutationFn'
   >,
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<CreateScoreResponse, Error, CreateScorePayload>({
+  return useMutation<
+    CreateScoreResponse,
+    Error,
+    CreateScorePayload,
+    CreateScoreResponse
+  >({
     mutationFn: createScore,
     ...options,
+    onMutate: async variables => {
+      if (options?.onMutate) {
+        options.onMutate(variables);
+      }
+
+      await queryClient.cancelQueries({
+        queryKey: scoresKeys.list({ id: variables.id }),
+      });
+
+      const previousScore = queryClient.getQueryData<CreateScoreResponse>(
+        scoresKeys.list({ id: variables.id }),
+      );
+
+      queryClient.setQueryData<ReadScoreResponse>(
+        scoresKeys.list({ id: variables.id }),
+        {
+          ...previousScore,
+          score: variables.score,
+        },
+      );
+
+      return previousScore;
+    },
+    onError: (err, variables, context) => {
+      if (context) {
+        queryClient.setQueryData(
+          scoresKeys.list({ id: variables.id }),
+          context,
+        );
+      }
+
+      if (options?.onError) {
+        options.onError(err, variables, context);
+      }
+    },
     onSettled: async (...args) => {
       const { id } = args[2];
       queryClient.invalidateQueries({
@@ -54,15 +100,60 @@ export const useCreateScore = (
 
 export const useUpdateScore = (
   options?: Omit<
-    UseMutationOptions<UpdateScoreResponse, Error, UpdateScorePayload>,
+    UseMutationOptions<
+      UpdateScoreResponse,
+      Error,
+      UpdateScorePayload,
+      UpdateScoreResponse
+    >,
     'mutationFn'
   >,
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<UpdateScoreResponse, Error, UpdateScorePayload>({
+  return useMutation<
+    UpdateScoreResponse,
+    Error,
+    UpdateScorePayload,
+    UpdateScoreResponse
+  >({
     mutationFn: updateScore,
     ...options,
+    onMutate: async variables => {
+      if (options?.onMutate) {
+        options.onMutate(variables);
+      }
+
+      await queryClient.cancelQueries({
+        queryKey: scoresKeys.list({ id: variables.id }),
+      });
+
+      const previousScore = queryClient.getQueryData<UpdateScoreResponse>(
+        scoresKeys.list({ id: variables.id }),
+      );
+
+      queryClient.setQueryData<ReadScoreResponse>(
+        scoresKeys.list({ id: variables.id }),
+        {
+          ...previousScore,
+          score: variables.score,
+        },
+      );
+
+      return previousScore;
+    },
+    onError: (err, variables, context) => {
+      if (context) {
+        queryClient.setQueryData(
+          scoresKeys.list({ id: variables.id }),
+          context,
+        );
+      }
+
+      if (options?.onError) {
+        options.onError(err, variables, context);
+      }
+    },
     onSettled: async (...args) => {
       const { id } = args[2];
       queryClient.invalidateQueries({

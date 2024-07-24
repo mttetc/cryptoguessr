@@ -1,5 +1,20 @@
-import { formatCurrency, getNewScore } from '@/helpers';
-import { describe, it, expect } from 'vitest';
+import {
+  formatCurrency,
+  getConfirmationToast,
+  getCryptoPrice,
+  getNewScore,
+  invalidateCryptoPrices,
+} from '@/helpers';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { toast } from 'sonner';
+import { QueryClient } from '@tanstack/react-query';
+
+vi.mock('sonner', () => ({
+  toast: {
+    success: vi.fn(),
+    error: vi.fn(),
+  },
+}));
 
 describe('formatCurrency', () => {
   it('formats USD currency correctly', () => {
@@ -69,5 +84,81 @@ describe('getNewScore', () => {
       currentScore: 0,
     });
     expect(result).toBe(0);
+  });
+});
+
+describe('getConfirmationToast', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should display error toast when previousScore is greater than or equal to newScore', () => {
+    getConfirmationToast({ previousScore: 5, newScore: 4 });
+    expect(toast.error).toHaveBeenCalledWith('Too bad!', {
+      position: 'bottom-center',
+      description: "You guessed wrong, but don't worry, you can try again!",
+    });
+  });
+
+  it('should display success toast when newScore is greater than previousScore', () => {
+    getConfirmationToast({ previousScore: 3, newScore: 5 });
+    expect(toast.success).toHaveBeenCalledWith('Nice!', {
+      position: 'bottom-center',
+      description: 'You guessed right, keep it up!',
+    });
+  });
+});
+
+it('calls invalidateQueries with the correct queryKey', async () => {
+  const queryClient = new QueryClient();
+  const mockInvalidateQueries = vi.fn();
+  queryClient.invalidateQueries = mockInvalidateQueries;
+
+  const selectedCrypto = 'BTC';
+  const selectedCurrency = 'USD';
+
+  await invalidateCryptoPrices({
+    queryClient,
+    selectedCrypto,
+    selectedCurrency,
+  });
+
+  expect(mockInvalidateQueries).toHaveBeenCalledWith({
+    queryKey: ['cryptoPrice', 'list', { crypto: 'BTC', currency: 'USD' }],
+  });
+});
+
+describe('getCryptoPrice', () => {
+  it('should return the price if query data exists', () => {
+    const mockQueryClient = new QueryClient();
+    const selectedCrypto = 'BTC';
+    const selectedCurrency = 'USD';
+    const expectedPrice = 50000;
+
+    mockQueryClient.getQueryData = vi.fn().mockReturnValueOnce(expectedPrice);
+
+    const price = getCryptoPrice({
+      queryClient: mockQueryClient,
+      selectedCrypto,
+      selectedCurrency,
+    });
+
+    expect(price).toEqual(expectedPrice);
+  });
+
+  it('should return 0 if query data does not exist', () => {
+    const mockQueryClient = new QueryClient();
+    const selectedCrypto = 'BTC';
+    const selectedCurrency = 'USD';
+
+    mockQueryClient.getQueryData = vi.fn().mockReturnValueOnce(undefined);
+
+    const price = getCryptoPrice({
+      queryClient: mockQueryClient,
+      selectedCrypto,
+      selectedCurrency,
+    });
+
+    expect(price).toEqual(0);
   });
 });

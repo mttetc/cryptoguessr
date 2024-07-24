@@ -1,18 +1,19 @@
 import { COUNTDOWN, COUNTDOWN_INTERVAL } from '@/consts';
-import { getNewScore } from '@/helpers';
+import { getCryptoPrice, getNewScore, invalidateCryptoPrices } from '@/helpers';
+import { useReadCryptoPrice } from '@/services/cryptoPrice/hooks';
 import useStore from '@/store';
+import { useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import useScore from './useScore';
-import { useReadCryptoPrice } from '@/services/cryptoPrice/hooks';
 
-const useInitCountdown = () => {
+const useCountdown = () => {
+  const queryClient = useQueryClient();
   const selectedCrypto = useStore(state => state.selectedCrypto);
   const selectedCurrency = useStore(state => state.selectedCurrency);
   const setCountdownActive = useStore(state => state.setCountdownActive);
   const setCountdown = useStore(state => state.setCountdown);
 
-  const { score, invalidateCryptoPrices, getUpdatedPrice, handleScoreUpdate } =
-    useScore();
+  const { score, handleScoreUpdate } = useScore();
 
   const { data: cryptoPrice = 0 } = useReadCryptoPrice({
     params: { crypto: selectedCrypto, currency: selectedCurrency },
@@ -27,16 +28,28 @@ const useInitCountdown = () => {
         const countdown = useStore.getState().countdown;
 
         if (countdown === 0) {
+          setCountdownActive(false);
           clearInterval(interval);
-          await invalidateCryptoPrices();
-          const updatedPrice = getUpdatedPrice();
+
+          await invalidateCryptoPrices({
+            queryClient,
+            selectedCrypto,
+            selectedCurrency,
+          });
+
+          const updatedPrice = getCryptoPrice({
+            queryClient,
+            selectedCrypto,
+            selectedCurrency,
+          });
+
           const newScore = getNewScore({
             updatedPrice,
             currentScore: score,
             price: cryptoPrice,
             direction,
           });
-          setCountdownActive(false);
+
           handleScoreUpdate(newScore);
           return;
         }
@@ -47,8 +60,9 @@ const useInitCountdown = () => {
       return () => clearInterval(interval);
     },
     [
-      invalidateCryptoPrices,
-      getUpdatedPrice,
+      queryClient,
+      selectedCrypto,
+      selectedCurrency,
       handleScoreUpdate,
       setCountdown,
       setCountdownActive,
@@ -58,4 +72,4 @@ const useInitCountdown = () => {
   );
 };
 
-export default useInitCountdown;
+export default useCountdown;

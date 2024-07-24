@@ -1,4 +1,4 @@
-import useInitCountdown from '@/hooks/useInitCountdown';
+import useCountdown from '@/hooks/useCountdown';
 import useStore from '@/store';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Clock } from 'lucide-react';
@@ -7,10 +7,15 @@ import { forwardRef, useImperativeHandle } from 'react';
 export type GuessBoxCountdownRef = {
   onStartCountdown: (direction: 'up' | 'down') => void;
 };
+const variants = {
+  initial: { opacity: 0, y: -10 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: 10 },
+};
 
 const GuessBoxCountdown = forwardRef<GuessBoxCountdownRef | null, unknown>(
   (_, ref) => {
-    const startCountdown = useInitCountdown();
+    const startCountdown = useCountdown();
     const countdown = useStore(state => state.countdown);
     const isCountdownVisible = countdown > 0;
 
@@ -24,10 +29,11 @@ const GuessBoxCountdown = forwardRef<GuessBoxCountdownRef | null, unknown>(
       <AnimatePresence>
         {isCountdownVisible && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            transition={{ duration: 0.5 }}
+            variants={variants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.4 }}
             className="flex gap-1 items-center"
           >
             <Clock size={12} />

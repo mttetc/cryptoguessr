@@ -22,7 +22,7 @@ export const readScore = async (id: string) => {
     throw new Error(ZodError.create(parsedRes.error.errors).message);
   }
 
-  return parsedRes.data.score;
+  return parsedRes.data;
 };
 
 export const createScore = async (payload: CreateScorePayload) => {

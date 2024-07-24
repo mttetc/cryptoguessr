@@ -11,14 +11,14 @@ const animationVariants: Variants = {
 
 const Score = () => {
   const anonymousId = useStore(state => state.anonymousId);
-  const { data: score = 0 } = useReadScore(anonymousId);
+  const { data = { score: 0 } } = useReadScore(anonymousId);
 
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <div className="flex items-center gap-2">
           <span className="text-xl font-medium text-secondary-foreground">
-            {score}
+            {data.score}
           </span>
           <motion.div variants={animationVariants} animate={'animate'}>
             <TrophyIcon size={16} className="text-primary" />
