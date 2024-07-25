@@ -5,14 +5,14 @@ import {
   getNewScore,
   invalidateCryptoPrices,
 } from '@/helpers';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { toast } from 'sonner';
 import { QueryClient } from '@tanstack/react-query';
+import { describe, expect, it } from 'vitest';
 
 vi.mock('sonner', () => ({
   toast: {
-    success: vi.fn(),
     error: vi.fn(),
+    success: vi.fn(),
   },
 }));
 

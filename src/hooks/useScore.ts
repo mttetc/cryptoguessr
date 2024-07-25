@@ -23,14 +23,11 @@ const useScore = () => {
         scoresKeys.list({ id: variables.id }),
       );
 
-      console.log({
-        newScore: variables.score,
-        previousScore: previousScore?.score ?? 0,
-      });
       getConfirmationToast({
         newScore: variables.score,
         previousScore: previousScore?.score ?? 0,
       });
+
       return previousScore;
     },
     onSuccess: (_data, variables) => {
@@ -42,10 +39,12 @@ const useScore = () => {
       const previousScore = queryClient.getQueryData<UpdateScoreResponse>(
         scoresKeys.list({ id: variables.id }),
       );
+
       getConfirmationToast({
         newScore: variables.score,
         previousScore: previousScore?.score ?? 0,
       });
+
       return previousScore;
     },
   });

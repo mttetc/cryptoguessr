@@ -4,13 +4,14 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Clock } from 'lucide-react';
 import { forwardRef, useImperativeHandle } from 'react';
 
-export type GuessBoxCountdownRef = {
-  onStartCountdown: (direction: 'up' | 'down') => void;
-};
 const variants = {
   initial: { opacity: 0, y: -10 },
   animate: { opacity: 1, y: 0 },
   exit: { opacity: 0, y: 10 },
+};
+
+export type GuessBoxCountdownRef = {
+  onStartCountdown: (direction: 'up' | 'down') => void;
 };
 
 const GuessBoxCountdown = forwardRef<GuessBoxCountdownRef | null, unknown>(
@@ -35,6 +36,7 @@ const GuessBoxCountdown = forwardRef<GuessBoxCountdownRef | null, unknown>(
             exit="exit"
             transition={{ duration: 0.4 }}
             className="flex gap-1 items-center"
+            data-testid="guess-box-countdown"
           >
             <Clock size={12} />
             {countdown} seconds left to vote again

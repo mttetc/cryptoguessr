@@ -24,9 +24,10 @@
     "noFallthroughCasesInSwitch": true,
 
     "baseUrl": ".",
+    "types": ["vitest/jsdom", "vitest/globals", "cypress"],
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "./__mocks__", "./setup-vitest.ts"]
 }

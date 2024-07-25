@@ -21,6 +21,7 @@ const GuessBoxButtons = ({ onGuess, ...restProps }: GuessBoxButtonsProps) => {
         className="w-24 flex gap-1"
         onClick={handleGuess('up')}
         disabled={isCountdownActive}
+        data-testid="guess-box-button-up"
       >
         <ArrowUpIcon size={14} />
         Up
@@ -30,6 +31,7 @@ const GuessBoxButtons = ({ onGuess, ...restProps }: GuessBoxButtonsProps) => {
         className="w-24 flex gap-1"
         onClick={handleGuess('down')}
         disabled={isCountdownActive}
+        data-testid="guess-box-button-down"
       >
         <ArrowDownIcon size={14} />
         Down
