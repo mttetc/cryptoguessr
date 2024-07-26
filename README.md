@@ -2,6 +2,8 @@
 
 This app uses React, Typescript, Shadcn, Zustand, Tanstack Query, Vite, Cypress, Binance API & an AWS backend.
 
+Link : https://main.d3kr8yf5x1pg0n.amplifyapp.com/
+
 ## How to Launch the App
 
 1. **Install Dependencies**:
