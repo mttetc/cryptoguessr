@@ -7,7 +7,7 @@ import {
 import { CreateScorePayload, UpdateScorePayload } from './types';
 
 export const readScore = async (id: string) => {
-  const url = `${import.meta.env.VITE_AWS_SCORES_ENDPOINT!}/${id}`;
+  const url = `https://wn63ai4yyb.execute-api.eu-west-3.amazonaws.com/dev/scores/${id}`;
 
   const response = await fetch(url);
 
@@ -26,7 +26,8 @@ export const readScore = async (id: string) => {
 };
 
 export const createScore = async (payload: CreateScorePayload) => {
-  const url = import.meta.env.VITE_AWS_SCORES_ENDPOINT!;
+  const url =
+    'https://wn63ai4yyb.execute-api.eu-west-3.amazonaws.com/dev/scores/';
 
   const response = await fetch(url, {
     method: 'POST',
@@ -51,7 +52,7 @@ export const createScore = async (payload: CreateScorePayload) => {
 };
 
 export const updateScore = async (payload: UpdateScorePayload) => {
-  const url = `${import.meta.env.VITE_AWS_SCORES_ENDPOINT!}/${payload.id}`;
+  const url = `https://wn63ai4yyb.execute-api.eu-west-3.amazonaws.com/dev/scores/${payload.id}`;
 
   const response = await fetch(url, {
     method: 'PATCH',

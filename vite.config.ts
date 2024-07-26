@@ -19,8 +19,8 @@ export default defineConfig({
     },
   },
   server: {
-    host: '0.0.0.0', // Change this to a valid IP address if needed
-    port: 5173, // Optional otherwise your app will start on default port
+    host: '0.0.0.0',
+    port: 5173,
   },
   test: {
     setupFiles: ['./setup-vitest.ts'],

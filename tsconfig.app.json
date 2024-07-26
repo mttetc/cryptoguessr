@@ -29,5 +29,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "./__mocks__", "./setup-vitest.ts"]
+  "include": ["src", "./__mocks__", "./setup-vitest.ts", "global.d.ts"]
 }

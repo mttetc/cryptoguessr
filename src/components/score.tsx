@@ -17,7 +17,10 @@ const Score = () => {
     <Tooltip>
       <TooltipTrigger asChild>
         <div className="flex items-center gap-2">
-          <span className="text-xl font-medium text-secondary-foreground">
+          <span
+            className="text-xl font-medium text-secondary-foreground"
+            data-testid="score"
+          >
             {data.score}
           </span>
           <motion.div variants={animationVariants} animate={'animate'}>
