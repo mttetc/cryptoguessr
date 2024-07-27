@@ -21,9 +21,10 @@ const useCountdown = () => {
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleFinishCountdown = useCallback(
+  const startCountdown = useCallback(
     async (direction: 'up' | 'down') => {
-      setCountdownActive(false);
+      setCountdownActive(true);
+
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
@@ -41,27 +42,15 @@ const useCountdown = () => {
       });
 
       const isSameScore = newScore === score;
-      if (isSameScore) {
-        return;
-      }
-
-      handleScoreUpdate(newScore);
-    },
-    [score, handleScoreUpdate, queryClient, cryptoPrice, setCountdownActive],
-  );
-
-  const startCountdown = useCallback(
-    (direction: 'up' | 'down') => {
-      setCountdownActive(true);
-
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
+      if (!isSameScore) {
+        handleScoreUpdate(newScore);
       }
 
       intervalRef.current = setInterval(() => {
         setCountdown(prev => {
           if (prev === 0) {
-            handleFinishCountdown(direction);
+            setCountdownActive(false);
+            clearInterval(intervalRef.current!);
             return COUNTDOWN;
           }
 
@@ -69,7 +58,7 @@ const useCountdown = () => {
         });
       }, COUNTDOWN_INTERVAL * 1000);
     },
-    [setCountdown, setCountdownActive, handleFinishCountdown],
+    [score, handleScoreUpdate, queryClient, cryptoPrice, setCountdownActive],
   );
 
   useEffect(() => {

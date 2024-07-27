@@ -1,7 +1,5 @@
 /// <reference types="cypress" />
 
-import { waitForCountdownToFinish } from '../support/commands';
-
 describe('GuessBox Score Check Test', () => {
   beforeEach(() => {
     cy.visit('/');
@@ -38,11 +36,7 @@ describe('GuessBox Score Check Test', () => {
 
     cy.get('[data-testid="guess-box-button-up"]').click();
     cy.get('[data-testid="guess-box-countdown"]').should('be.visible');
-
-    waitForCountdownToFinish().then(() => {
-      cy.wait('@getCryptoPriceHigher');
-      cy.wait('@updateScore');
-      cy.get('[data-testid="score"]').should('have.text', '1');
-    });
+    cy.wait('@updateScore');
+    cy.get('[data-testid="score"]').should('have.text', '1');
   });
 });

@@ -19,6 +19,8 @@ const GuessBoxCountdown = forwardRef<GuessBoxCountdownRef | null, unknown>(
     const { startCountdown, countdown } = useCountdown();
     const isCountdownActive = useStore(state => state.isCountdownActive);
     const isCountdownVisible = countdown > 0 && isCountdownActive;
+    const isPlural = countdown > 1;
+    const secondText = isPlural ? 'seconds' : 'second';
 
     useImperativeHandle(ref, () => ({
       onStartCountdown: direction => {
@@ -39,7 +41,7 @@ const GuessBoxCountdown = forwardRef<GuessBoxCountdownRef | null, unknown>(
             data-testid="guess-box-countdown"
           >
             <Clock size={12} />
-            {countdown} seconds left to vote again
+            {countdown} {secondText} left to vote again
           </motion.div>
         )}
       </AnimatePresence>
