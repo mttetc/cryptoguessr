@@ -1,34 +1,14 @@
 /// <reference types="cypress" />
 
-describe('GuessBox Button Up Test', () => {
+import { waitForCountdownToFinish } from '../support/commands';
+
+describe('Reset Score ButtonTest', () => {
   beforeEach(() => {
     cy.visit('/');
-    cy.window()
-      .its('store')
-      .then(store => {
-        store.setAnonymousId('someid');
-      });
+    cy.setAnonymousId();
   });
 
   it('should reset the score to 0', () => {
-    const waitForCountdownToFinish = () => {
-      return new Cypress.Promise(resolve => {
-        const check = () => {
-          cy.window()
-            .its('store.isCountdownActive')
-            .then(isCountdownActive => {
-              if (isCountdownActive) {
-                // eslint-disable-next-line cypress/no-unnecessary-waiting
-                cy.wait(1000).then(check);
-              } else {
-                resolve();
-              }
-            });
-        };
-        check();
-      });
-    };
-
     cy.get('[data-testid="guess-box-button-up"]').click();
 
     waitForCountdownToFinish().then(() => {

@@ -35,3 +35,33 @@
 //     }
 //   }
 // }
+
+export const waitForCountdownToFinish = () => {
+  return new Cypress.Promise(resolve => {
+    const check = () => {
+      cy.window()
+        .its('store.isCountdownActive')
+        .then(isCountdownActive => {
+          if (isCountdownActive) {
+            cy.get('[data-testid="guess-box-button-up"]').should('be.disabled');
+            cy.get('[data-testid="guess-box-button-down"]').should(
+              'be.disabled',
+            );
+            // eslint-disable-next-line cypress/no-unnecessary-waiting
+            cy.wait(1000).then(check);
+          } else {
+            resolve();
+          }
+        });
+    };
+    check();
+  });
+};
+
+Cypress.Commands.add('setAnonymousId', () => {
+  cy.window()
+    .its('store')
+    .then(store => {
+      store.setAnonymousId('someid');
+    });
+});
