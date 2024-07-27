@@ -3,7 +3,7 @@ import {
   getConfirmationToast,
   getCryptoPrice,
   getNewScore,
-  invalidateCryptoPrices,
+  invalidateCryptoPrice,
 } from '@/helpers';
 import { useReadCryptoPrice } from '@/services/cryptoPrice/hooks';
 import useStore from '@/store';
@@ -28,7 +28,7 @@ const useCountdown = () => {
 
   const updateScore = useCallback(
     async (direction: 'up' | 'down') => {
-      await invalidateCryptoPrices({
+      await invalidateCryptoPrice({
         queryClient,
         selectedCrypto,
         selectedCurrency,

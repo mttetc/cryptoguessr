@@ -3,7 +3,7 @@ import {
   getConfirmationToast,
   getCryptoPrice,
   getNewScore,
-  invalidateCryptoPrices,
+  invalidateCryptoPrice,
 } from '@/helpers';
 import { toast } from 'sonner';
 import { QueryClient } from '@tanstack/react-query';
@@ -117,7 +117,7 @@ it('calls invalidateQueries with the correct queryKey', async () => {
   const selectedCrypto = 'BTC';
   const selectedCurrency = 'USD';
 
-  await invalidateCryptoPrices({
+  await invalidateCryptoPrice({
     queryClient,
     selectedCrypto,
     selectedCurrency,

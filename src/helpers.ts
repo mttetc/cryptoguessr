@@ -42,7 +42,7 @@ export const getNewScore = ({
   return Math.max(0, newScore);
 };
 
-export const invalidateCryptoPrices = async ({
+export const invalidateCryptoPrice = async ({
   queryClient,
   selectedCrypto,
   selectedCurrency,
