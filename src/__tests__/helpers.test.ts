@@ -2,8 +2,9 @@ import {
   formatCurrency,
   getConfirmationToast,
   getCryptoPrice,
-  getNewScore,
+  calculateNewScore,
   invalidateCryptoPrice,
+  getNewScore,
 } from '@/helpers';
 import { toast } from 'sonner';
 import { QueryClient } from '@tanstack/react-query';
@@ -35,9 +36,9 @@ describe('formatCurrency', () => {
   });
 });
 
-describe('getNewScore', () => {
+describe('calculateNewScore', () => {
   it('should increase score by 1 if direction is up and updatedPrice is greater than price', () => {
-    const result = getNewScore({
+    const result = calculateNewScore({
       direction: 'up',
       updatedPrice: 110,
       price: 100,
@@ -47,7 +48,7 @@ describe('getNewScore', () => {
   });
 
   it('should decrease score by 1 if direction is up but updatedPrice is not greater than price', () => {
-    const result = getNewScore({
+    const result = calculateNewScore({
       direction: 'up',
       updatedPrice: 90,
       price: 100,
@@ -57,7 +58,7 @@ describe('getNewScore', () => {
   });
 
   it('should increase score by 1 if direction is down and updatedPrice is less than price', () => {
-    const result = getNewScore({
+    const result = calculateNewScore({
       direction: 'down',
       updatedPrice: 90,
       price: 100,
@@ -67,7 +68,7 @@ describe('getNewScore', () => {
   });
 
   it('should decrease score by 1 if direction is down but updatedPrice is not less than price', () => {
-    const result = getNewScore({
+    const result = calculateNewScore({
       direction: 'down',
       updatedPrice: 110,
       price: 100,
@@ -77,7 +78,7 @@ describe('getNewScore', () => {
   });
 
   it('should not allow the score to go below 0', () => {
-    const result = getNewScore({
+    const result = calculateNewScore({
       direction: 'up',
       updatedPrice: 90,
       price: 100,
@@ -114,13 +115,8 @@ it('calls invalidateQueries with the correct queryKey', async () => {
   const mockInvalidateQueries = vi.fn();
   queryClient.invalidateQueries = mockInvalidateQueries;
 
-  const selectedCrypto = 'BTC';
-  const selectedCurrency = 'USD';
-
   await invalidateCryptoPrice({
     queryClient,
-    selectedCrypto,
-    selectedCurrency,
   });
 
   expect(mockInvalidateQueries).toHaveBeenCalledWith({
@@ -131,16 +127,12 @@ it('calls invalidateQueries with the correct queryKey', async () => {
 describe('getCryptoPrice', () => {
   it('should return the price if query data exists', () => {
     const mockQueryClient = new QueryClient();
-    const selectedCrypto = 'BTC';
-    const selectedCurrency = 'USD';
     const expectedPrice = 50000;
 
     mockQueryClient.getQueryData = vi.fn().mockReturnValueOnce(expectedPrice);
 
     const price = getCryptoPrice({
       queryClient: mockQueryClient,
-      selectedCrypto,
-      selectedCurrency,
     });
 
     expect(price).toEqual(expectedPrice);
@@ -148,17 +140,93 @@ describe('getCryptoPrice', () => {
 
   it('should return 0 if query data does not exist', () => {
     const mockQueryClient = new QueryClient();
-    const selectedCrypto = 'BTC';
-    const selectedCurrency = 'USD';
 
     mockQueryClient.getQueryData = vi.fn().mockReturnValueOnce(undefined);
 
     const price = getCryptoPrice({
       queryClient: mockQueryClient,
-      selectedCrypto,
-      selectedCurrency,
     });
 
     expect(price).toEqual(0);
+  });
+});
+
+describe('getNewScore', () => {
+  const queryClient = new QueryClient();
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should increment the score by one if cryptoPrice has gone up and direction is up', async () => {
+    const score = 100;
+    const cryptoPrice = 50;
+    const expectedPrice = 100;
+    const direction = 'up';
+
+    queryClient.getQueryData = vi.fn().mockReturnValueOnce(expectedPrice);
+
+    const result = await getNewScore({
+      score,
+      cryptoPrice,
+      queryClient,
+      direction,
+    });
+
+    expect(result).toBe(score + 1);
+  });
+
+  it('should decrement the score by one if cryptoPrice has gone up and direction is up', async () => {
+    const score = 100;
+    const cryptoPrice = 50;
+    const expectedPrice = 40;
+    const direction = 'up';
+
+    queryClient.getQueryData = vi.fn().mockReturnValueOnce(expectedPrice);
+
+    const result = await getNewScore({
+      score,
+      cryptoPrice,
+      queryClient,
+      direction,
+    });
+
+    expect(result).toBe(score - 1);
+  });
+
+  it('should increment the score by one if cryptoPrice has gone down and direction is down', async () => {
+    const score = 100;
+    const cryptoPrice = 50;
+    const expectedPrice = 40;
+    const direction = 'down';
+
+    queryClient.getQueryData = vi.fn().mockReturnValueOnce(expectedPrice);
+
+    const result = await getNewScore({
+      score,
+      cryptoPrice,
+      queryClient,
+      direction,
+    });
+
+    expect(result).toBe(score + 1);
+  });
+
+  it('should decrement the score by one if cryptoPrice has gone up and direction is down', async () => {
+    const score = 100;
+    const cryptoPrice = 50;
+    const expectedPrice = 60;
+    const direction = 'down';
+
+    queryClient.getQueryData = vi.fn().mockReturnValueOnce(expectedPrice);
+
+    const result = await getNewScore({
+      score,
+      cryptoPrice,
+      queryClient,
+      direction,
+    });
+
+    expect(result).toBe(score - 1);
   });
 });

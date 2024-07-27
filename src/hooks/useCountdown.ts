@@ -1,10 +1,5 @@
 import { COUNTDOWN, COUNTDOWN_INTERVAL } from '@/consts';
-import {
-  getConfirmationToast,
-  getCryptoPrice,
-  getNewScore,
-  invalidateCryptoPrice,
-} from '@/helpers';
+import { getConfirmationToast, getNewScore } from '@/helpers';
 import { useReadCryptoPrice } from '@/services/cryptoPrice/hooks';
 import useStore from '@/store';
 import { useQueryClient } from '@tanstack/react-query';
@@ -26,49 +21,33 @@ const useCountdown = () => {
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const updateScore = useCallback(
+  const handleFinishCountdown = useCallback(
     async (direction: 'up' | 'down') => {
-      await invalidateCryptoPrice({
-        queryClient,
-        selectedCrypto,
-        selectedCurrency,
-      });
+      setCountdownActive(false);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
 
-      const updatedPrice = getCryptoPrice({
-        queryClient,
-        selectedCrypto,
-        selectedCurrency,
-      });
-
-      const newScore = getNewScore({
-        updatedPrice,
-        currentScore: score,
-        price: cryptoPrice,
+      const newScore = await getNewScore({
         direction,
+        score,
+        queryClient,
+        cryptoPrice,
       });
-
-      const isSameScore = newScore === score;
 
       getConfirmationToast({
         newScore,
         previousScore: score,
       });
 
-      // no need to update the score if it's the same
+      const isSameScore = newScore === score;
       if (isSameScore) {
         return;
       }
 
       handleScoreUpdate(newScore);
     },
-    [
-      queryClient,
-      selectedCrypto,
-      selectedCurrency,
-      score,
-      cryptoPrice,
-      handleScoreUpdate,
-    ],
+    [score, handleScoreUpdate, queryClient, cryptoPrice, setCountdownActive],
   );
 
   const startCountdown = useCallback(
@@ -82,11 +61,7 @@ const useCountdown = () => {
       intervalRef.current = setInterval(() => {
         setCountdown(prev => {
           if (prev === 0) {
-            setCountdownActive(false);
-            if (intervalRef.current) {
-              clearInterval(intervalRef.current);
-            }
-            updateScore(direction);
+            handleFinishCountdown(direction);
             return COUNTDOWN;
           }
 
@@ -94,7 +69,7 @@ const useCountdown = () => {
         });
       }, COUNTDOWN_INTERVAL * 1000);
     },
-    [updateScore, setCountdown, setCountdownActive],
+    [setCountdown, setCountdownActive, handleFinishCountdown],
   );
 
   useEffect(() => {

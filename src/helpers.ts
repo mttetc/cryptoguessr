@@ -1,8 +1,9 @@
 import { QueryClient } from '@tanstack/react-query';
-import { CURRENCY_TO_LOCALE_MAPPING } from './consts';
-import { Crypto, Currency } from './services/cryptoPrice/types';
-import { cryptoPriceKeys } from './services/cryptoPrice/queryKeys';
 import { toast } from 'sonner';
+import { CURRENCY_TO_LOCALE_MAPPING } from './consts';
+import { cryptoPriceKeys } from './services/cryptoPrice/queryKeys';
+import { Currency } from './services/cryptoPrice/types';
+import useStore from './store';
 
 export const formatCurrency = (
   amount: number,
@@ -16,7 +17,7 @@ export const formatCurrency = (
   return formatter.format(amount);
 };
 
-export const getNewScore = ({
+export const calculateNewScore = ({
   direction,
   updatedPrice,
   price,
@@ -44,13 +45,12 @@ export const getNewScore = ({
 
 export const invalidateCryptoPrice = async ({
   queryClient,
-  selectedCrypto,
-  selectedCurrency,
 }: {
   queryClient: QueryClient;
-  selectedCrypto: Crypto;
-  selectedCurrency: Currency;
 }) => {
+  const selectedCrypto = useStore.getState().selectedCrypto;
+  const selectedCurrency = useStore.getState().selectedCurrency;
+
   await queryClient.invalidateQueries({
     queryKey: cryptoPriceKeys.list({
       crypto: selectedCrypto,
@@ -61,13 +61,12 @@ export const invalidateCryptoPrice = async ({
 
 export const getCryptoPrice = ({
   queryClient,
-  selectedCrypto,
-  selectedCurrency,
 }: {
   queryClient: QueryClient;
-  selectedCrypto: Crypto;
-  selectedCurrency: Currency;
 }) => {
+  const selectedCrypto = useStore.getState().selectedCrypto;
+  const selectedCurrency = useStore.getState().selectedCurrency;
+
   return (
     queryClient.getQueryData<number>(
       cryptoPriceKeys.list({
@@ -96,4 +95,33 @@ export const getConfirmationToast = ({
     position: 'bottom-center',
     description: 'You guessed right, keep it up!',
   });
+};
+
+export const getNewScore = async ({
+  score,
+  cryptoPrice,
+  queryClient,
+  direction,
+}: {
+  score: number;
+  cryptoPrice: number;
+  queryClient: QueryClient;
+  direction: 'up' | 'down';
+}) => {
+  await invalidateCryptoPrice({
+    queryClient,
+  });
+
+  const updatedPrice = getCryptoPrice({
+    queryClient,
+  });
+
+  const newScore = calculateNewScore({
+    updatedPrice,
+    currentScore: score,
+    price: cryptoPrice,
+    direction,
+  });
+
+  return newScore;
 };
