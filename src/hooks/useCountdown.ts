@@ -1,17 +1,22 @@
 import { COUNTDOWN, COUNTDOWN_INTERVAL } from '@/consts';
-import { getCryptoPrice, getNewScore, invalidateCryptoPrices } from '@/helpers';
+import {
+  getConfirmationToast,
+  getCryptoPrice,
+  getNewScore,
+  invalidateCryptoPrices,
+} from '@/helpers';
 import { useReadCryptoPrice } from '@/services/cryptoPrice/hooks';
 import useStore from '@/store';
 import { useQueryClient } from '@tanstack/react-query';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import useScore from './useScore';
 
 const useCountdown = () => {
   const queryClient = useQueryClient();
+  const [countdown, setCountdown] = useState(COUNTDOWN);
   const selectedCrypto = useStore(state => state.selectedCrypto);
   const selectedCurrency = useStore(state => state.selectedCurrency);
   const setCountdownActive = useStore(state => state.setCountdownActive);
-  const setCountdown = useStore(state => state.setCountdown);
 
   const { score, handleScoreUpdate } = useScore();
 
@@ -19,57 +24,88 @@ const useCountdown = () => {
     params: { crypto: selectedCrypto, currency: selectedCurrency },
   });
 
-  return useCallback(
-    (direction: 'up' | 'down') => {
-      setCountdown(COUNTDOWN);
-      setCountdownActive(true);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-      const interval = setInterval(async () => {
-        const countdown = useStore.getState().countdown;
+  const updateScore = useCallback(
+    async (direction: 'up' | 'down') => {
+      await invalidateCryptoPrices({
+        queryClient,
+        selectedCrypto,
+        selectedCurrency,
+      });
 
-        if (countdown === 0) {
-          setCountdownActive(false);
-          clearInterval(interval);
+      const updatedPrice = getCryptoPrice({
+        queryClient,
+        selectedCrypto,
+        selectedCurrency,
+      });
 
-          await invalidateCryptoPrices({
-            queryClient,
-            selectedCrypto,
-            selectedCurrency,
-          });
+      const newScore = getNewScore({
+        updatedPrice,
+        currentScore: score,
+        price: cryptoPrice,
+        direction,
+      });
 
-          const updatedPrice = getCryptoPrice({
-            queryClient,
-            selectedCrypto,
-            selectedCurrency,
-          });
+      const isSameScore = newScore === score;
 
-          const newScore = getNewScore({
-            updatedPrice,
-            currentScore: score,
-            price: cryptoPrice,
-            direction,
-          });
+      getConfirmationToast({
+        newScore,
+        previousScore: score,
+      });
 
-          handleScoreUpdate(newScore);
-          return;
-        }
+      // no need to update the score if it's the same
+      if (isSameScore) {
+        return;
+      }
 
-        setCountdown(prev => prev - COUNTDOWN_INTERVAL / 1000);
-      }, COUNTDOWN_INTERVAL);
-
-      return () => clearInterval(interval);
+      handleScoreUpdate(newScore);
     },
     [
       queryClient,
       selectedCrypto,
       selectedCurrency,
-      handleScoreUpdate,
-      setCountdown,
-      setCountdownActive,
       score,
       cryptoPrice,
+      handleScoreUpdate,
     ],
   );
+
+  const startCountdown = useCallback(
+    (direction: 'up' | 'down') => {
+      setCountdownActive(true);
+
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+
+      intervalRef.current = setInterval(() => {
+        setCountdown(prev => {
+          if (prev === 0) {
+            setCountdownActive(false);
+            if (intervalRef.current) {
+              clearInterval(intervalRef.current);
+            }
+            updateScore(direction);
+            return COUNTDOWN;
+          }
+
+          return prev - COUNTDOWN_INTERVAL;
+        });
+      }, COUNTDOWN_INTERVAL * 1000);
+    },
+    [updateScore, setCountdown, setCountdownActive],
+  );
+
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
+
+  return { countdown, startCountdown };
 };
 
 export default useCountdown;

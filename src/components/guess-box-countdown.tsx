@@ -16,9 +16,9 @@ export type GuessBoxCountdownRef = {
 
 const GuessBoxCountdown = forwardRef<GuessBoxCountdownRef | null, unknown>(
   (_, ref) => {
-    const startCountdown = useCountdown();
-    const countdown = useStore(state => state.countdown);
-    const isCountdownVisible = countdown > 0;
+    const { startCountdown, countdown } = useCountdown();
+    const isCountdownActive = useStore(state => state.isCountdownActive);
+    const isCountdownVisible = countdown > 0 && isCountdownActive;
 
     useImperativeHandle(ref, () => ({
       onStartCountdown: direction => {
