@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+// TODO: Use third party to get any crypto and currency (probably binance api?)
 export const currencySchema = z.union([
   z.literal('USD'),
   z.literal('EUR'),
