@@ -1,18 +1,17 @@
-import { ComponentPropsWithoutRef } from 'react';
 import Header from '@/components/header';
+import { motion } from 'framer-motion';
 
-const Layout = ({
-  children,
-  ...restProps
-}: ComponentPropsWithoutRef<'div'>) => {
+const Layout = ({ children }: { children: JSX.Element }) => {
   return (
-    <div
+    <motion.div
       className="flex flex-col h-screen bg-background text-foreground"
-      {...restProps}
+      initial={{ opacity: 0.8 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4 }}
     >
       <Header />
       <div className="flex-1 flex justify-center">{children}</div>
-    </div>
+    </motion.div>
   );
 };
 
