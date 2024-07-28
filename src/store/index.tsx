@@ -15,7 +15,7 @@ const useStore = create<BoundStore>()(
     {
       name: 'crypto-guessr-store',
       storage: createJSONStorage(() => localStorage),
-      version: 1,
+      version: 2,
       partialize: state => {
         const {
           countdown,
