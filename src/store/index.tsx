@@ -5,16 +5,21 @@ import { createMainSlice } from '@/store/slices/main';
 import { createThemeSlice } from '@/store/slices/theme';
 import { BoundStore } from '@/store/types';
 
-const version = 4;
+const version = 5;
 
 const useStore = create<BoundStore>()(
   persist(
     (...args) => {
-      const storeVersion = Number(localStorage.getItem('version'));
-      if (storeVersion !== version) {
-        localStorage.removeItem('crypto-guessr-store');
+      const storedData = localStorage.getItem('crypto-guessr-store');
+      if (storedData) {
+        const parsedData = JSON.parse(storedData);
+        const storeVersion = parsedData.version
+          ? Number(parsedData.version)
+          : null;
+        if (storeVersion !== version) {
+          localStorage.removeItem('crypto-guessr-store');
+        }
       }
-      localStorage.setItem('version', version.toString());
 
       return {
         ...createThemeSlice(...args),
@@ -32,6 +37,7 @@ const useStore = create<BoundStore>()(
         theme: state.theme,
         selectedCurrency: state.selectedCurrency,
         selectedCrypto: state.selectedCrypto,
+        direction: state.direction,
       }),
     },
   ),
