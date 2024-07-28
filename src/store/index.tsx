@@ -5,7 +5,7 @@ import { createMainSlice } from '@/store/slices/main';
 import { createThemeSlice } from '@/store/slices/theme';
 import { BoundStore } from '@/store/types';
 
-const version = 5;
+const version = 6;
 
 const useStore = create<BoundStore>()(
   persist(
