@@ -3,7 +3,7 @@ import { formatCurrency } from '@/helpers';
 import { useReadCryptoPrice } from '@/services/cryptoPrice/hooks';
 import useStore from '@/store';
 import { ComponentPropsWithoutRef } from 'react';
-import Skeleton from './skeleton';
+import Skeleton from '@/components/skeleton';
 
 const CryptoDisplay = (props: ComponentPropsWithoutRef<'div'>) => {
   const { selectedCrypto, selectedCurrency } = useStore();

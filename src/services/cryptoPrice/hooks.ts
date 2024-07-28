@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import { readCryptoPrice } from './api';
-import { cryptoPriceKeys } from './queryKeys';
-import { ReadCryptoPriceParams } from './types';
+import { readCryptoPrice } from '@/services/cryptoPrice/api';
+import { cryptoPriceKeys } from '@/services/cryptoPrice/queryKeys';
+import { ReadCryptoPriceParams } from '@/services/cryptoPrice/types';
 
 type useReadBitcoinPriceProps = {
   options?: Omit<

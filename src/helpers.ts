@@ -1,9 +1,9 @@
 import { QueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { CURRENCY_TO_LOCALE_MAPPING } from './consts';
-import { cryptoPriceKeys } from './services/cryptoPrice/queryKeys';
-import { Currency } from './services/cryptoPrice/types';
-import useStore from './store';
+import { CURRENCY_TO_LOCALE_MAPPING } from '@/consts';
+import { cryptoPriceKeys } from '@/services/cryptoPrice/queryKeys';
+import { Currency } from '@/services/cryptoPrice/types';
+import useStore from '@/store';
 
 export const formatCurrency = (
   amount: number,

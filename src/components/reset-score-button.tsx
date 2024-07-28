@@ -1,8 +1,12 @@
 import { useReadScore, useUpdateScore } from '@/services/scores/hooks';
 import { AnimatePresence, motion } from 'framer-motion';
 import { RefreshCcw } from 'lucide-react';
-import { Button } from './ui/button';
-import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
+import { Button } from '@/components/ui/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 const buttonVariants = {
   hidden: { opacity: 0, width: 0, transition: { duration: 0.4 } },

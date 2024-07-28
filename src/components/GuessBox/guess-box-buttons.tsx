@@ -1,7 +1,7 @@
 import useStore from '@/store';
 import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react';
 import { ComponentPropsWithoutRef } from 'react';
-import { Button } from './ui/button';
+import { Button } from '@/components/ui/button';
 
 type GuessBoxButtonsProps = {
   onGuess: (direction: 'up' | 'down') => void;

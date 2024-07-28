@@ -1,4 +1,4 @@
-import GuessBox from '@/components/guess-box';
+import GuessBox from '@/components/GuessBox/guess-box';
 import Providers from '@/components/providers';
 import {
   act,

@@ -4,7 +4,7 @@ import {
   currencySchema,
   readCryptoPriceParamsSchema,
   readCryptoPriceSchema,
-} from './schemas';
+} from '@/services/cryptoPrice/schemas';
 
 export type Currency = z.infer<typeof currencySchema>;
 export type Crypto = z.infer<typeof cryptoSchema>;

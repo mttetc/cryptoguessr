@@ -5,7 +5,7 @@ import {
   readScoreResponseSchema,
   updateScorePayloadSchema,
   updateScoreResponseSchema,
-} from './schemas';
+} from '@/services/scores/schemas';
 
 export type ReadScoreResponse = z.infer<typeof readScoreResponseSchema>;
 

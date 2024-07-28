@@ -5,15 +5,15 @@ import {
   useQueryClient,
   UseQueryOptions,
 } from '@tanstack/react-query';
-import { createScore, readScore, updateScore } from './api';
-import { scoresKeys } from './queryKeys';
+import { createScore, readScore, updateScore } from '@/services/scores/api';
+import { scoresKeys } from '@/services/scores/queryKeys';
 import {
   CreateScorePayload,
   CreateScoreResponse,
   ReadScoreResponse,
   UpdateScorePayload,
   UpdateScoreResponse,
-} from './types';
+} from '@/services/scores/types';
 
 export const useReadScore = (
   id: string | undefined,

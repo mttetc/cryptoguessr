@@ -4,7 +4,7 @@ import { useReadCryptoPrice } from '@/services/cryptoPrice/hooks';
 import useStore from '@/store';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef } from 'react';
-import useScore from './useScore';
+import useScore from '@/hooks/useScore';
 
 const useCountdown = () => {
   const queryClient = useQueryClient();

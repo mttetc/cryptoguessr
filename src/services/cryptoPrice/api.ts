@@ -1,5 +1,5 @@
 import { ReadCryptoPriceParams } from '@/services/cryptoPrice/types';
-import { readCryptoPriceSchema } from './schemas';
+import { readCryptoPriceSchema } from '@/services/cryptoPrice/schemas';
 import { ZodError } from 'zod';
 
 export const readCryptoPrice = async (params: ReadCryptoPriceParams) => {

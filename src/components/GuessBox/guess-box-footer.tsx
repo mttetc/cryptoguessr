@@ -1,6 +1,8 @@
 import { useRef } from 'react';
-import GuessBoxButtons from './guess-box-buttons';
-import GuessBoxCountdown, { GuessBoxCountdownRef } from './guess-box-countdown';
+import GuessBoxButtons from '@/components/GuessBox/guess-box-buttons';
+import GuessBoxCountdown, {
+  GuessBoxCountdownRef,
+} from '@/components/GuessBox/guess-box-countdown';
 
 const GuessBoxFooter = () => {
   const countdownRef = useRef<GuessBoxCountdownRef | null>(null);

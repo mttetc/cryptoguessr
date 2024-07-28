@@ -2,7 +2,11 @@ import { useReadScore } from '@/services/scores/hooks';
 import useStore from '@/store';
 import { motion, Variants } from 'framer-motion';
 import { TrophyIcon } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 const animationVariants: Variants = {
   animate: { scale: [1, 1.4, 1], transition: { duration: 0.4 } },

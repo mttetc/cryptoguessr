@@ -3,8 +3,11 @@ import {
   createScoreResponseSchema,
   readScoreResponseSchema,
   updateScoreResponseSchema,
-} from './schemas';
-import { CreateScorePayload, UpdateScorePayload } from './types';
+} from '@/services/scores/schemas';
+import {
+  CreateScorePayload,
+  UpdateScorePayload,
+} from '@/services/scores/types';
 
 export const readScore = async (id: string) => {
   const url = `https://wn63ai4yyb.execute-api.eu-west-3.amazonaws.com/dev/scores/${id}`;

@@ -1,9 +1,9 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import { createCountdownSlice } from './slices/countdown';
-import { createMainSlice } from './slices/main';
-import { createThemeSlice } from './slices/theme';
-import { BoundStore } from './types';
+import { createCountdownSlice } from '@/store/slices/countdown';
+import { createMainSlice } from '@/store/slices/main';
+import { createThemeSlice } from '@/store/slices/theme';
+import { BoundStore } from '@/store/types';
 
 const useStore = create<BoundStore>()(
   persist(

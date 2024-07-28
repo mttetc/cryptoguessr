@@ -1,7 +1,7 @@
 import useStore from '@/store';
 import { motion } from 'framer-motion';
-import GuessBoxFooter from './guess-box-footer';
-import GuessBoxHeader from './guess-box-header';
+import GuessBoxFooter from '@/components/GuessBox/guess-box-footer';
+import GuessBoxHeader from '@/components/GuessBox/guess-box-header';
 
 export type CountdownComponent = {
   triggerGuess: (direction: 'up' | 'down') => void;

@@ -1,5 +1,5 @@
 import { StateCreator } from 'zustand';
-import { BoundStore } from '../types';
+import { BoundStore } from '@/store/types';
 import { COUNTDOWN } from '@/consts';
 
 export type CountdownSlice = {

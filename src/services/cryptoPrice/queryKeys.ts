@@ -1,4 +1,4 @@
-import { ReadCryptoPriceParams } from './types';
+import { ReadCryptoPriceParams } from '@/services/cryptoPrice/types';
 
 export const cryptoPriceKeys = {
   all: ['cryptoPrice'],

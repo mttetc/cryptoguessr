@@ -1,7 +1,7 @@
 import { Binance, Bitcoin, Cardano, Dogecoin, Ethereum } from 'cryptocons';
 import { ElementType } from 'react';
-import { cryptoSchema, currencySchema } from './services/cryptoPrice/schemas';
-import { Crypto, Currency } from './services/cryptoPrice/types';
+import { cryptoSchema, currencySchema } from '@/services/cryptoPrice/schemas';
+import { Crypto, Currency } from '@/services/cryptoPrice/types';
 
 export const COUNTDOWN = 60;
 export const COUNTDOWN_INTERVAL = 1;
