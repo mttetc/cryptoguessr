@@ -4,6 +4,7 @@ describe('Reset Score ButtonTest', () => {
   beforeEach(() => {
     cy.visit('/');
     cy.setAnonymousId();
+    cy.resetStore();
   });
 
   it('should reset the score to 0', () => {

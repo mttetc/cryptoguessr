@@ -5,6 +5,7 @@ import { waitForCountdownToFinish } from '../support/commands';
 describe('GuessBox Countdown Test', () => {
   beforeEach(() => {
     cy.visit('/');
+    cy.resetStore();
   });
 
   it('should show and then hide the countdown element', () => {

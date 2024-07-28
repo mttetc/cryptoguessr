@@ -5,6 +5,7 @@ declare global {
   namespace Cypress {
     interface Chainable {
       setAnonymousId(): Chainable<void>;
+      resetStore(): Chainable<void>;
     }
   }
 }

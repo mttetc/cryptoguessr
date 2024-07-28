@@ -3,6 +3,7 @@
 describe('GuessBox Score Check Test', () => {
   beforeEach(() => {
     cy.visit('/');
+    cy.resetStore();
   });
 
   it('should check that the score is not 0 after good guess', () => {

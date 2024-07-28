@@ -65,3 +65,12 @@ Cypress.Commands.add('setAnonymousId', () => {
       store.setAnonymousId('someid');
     });
 });
+
+Cypress.Commands.add('resetStore', () => {
+  cy.window()
+    .its('store')
+    .then(store => {
+      store.setCountdownActive(false);
+      store.setCountdown(60);
+    });
+});
