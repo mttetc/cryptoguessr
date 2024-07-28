@@ -3,8 +3,6 @@ import { BoundStore } from '@/store/types';
 import { COUNTDOWN } from '@/consts';
 
 export type CountdownSlice = {
-  direction: 'up' | 'down' | undefined;
-  setDirection: (value: 'up' | 'down' | undefined) => void;
   countdown: number;
   setCountdown: (value: ((countdown: number) => number) | number) => void;
   isCountdownActive: boolean;
@@ -17,10 +15,6 @@ export const createCountdownSlice: StateCreator<
   [],
   CountdownSlice
 > = set => ({
-  direction: undefined,
-  setDirection: value => {
-    set({ direction: value });
-  },
   countdown: COUNTDOWN,
   setCountdown: value => {
     set(state => ({

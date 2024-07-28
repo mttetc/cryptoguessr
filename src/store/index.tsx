@@ -37,7 +37,6 @@ const useStore = create<BoundStore>()(
         theme: state.theme,
         selectedCurrency: state.selectedCurrency,
         selectedCrypto: state.selectedCrypto,
-        direction: state.direction,
       }),
     },
   ),
