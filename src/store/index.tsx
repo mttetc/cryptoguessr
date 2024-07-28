@@ -1,39 +1,38 @@
 import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import { createCountdownSlice } from '@/store/slices/countdown';
 import { createMainSlice } from '@/store/slices/main';
 import { createThemeSlice } from '@/store/slices/theme';
 import { BoundStore } from '@/store/types';
 
+const version = 4;
+
 const useStore = create<BoundStore>()(
   persist(
-    (...a) => ({
-      ...createThemeSlice(...a),
-      ...createCountdownSlice(...a),
-      ...createMainSlice(...a),
-    }),
+    (...args) => {
+      const storeVersion = Number(localStorage.getItem('version'));
+      if (storeVersion !== version) {
+        localStorage.removeItem('crypto-guessr-store');
+      }
+      localStorage.setItem('version', version.toString());
+
+      return {
+        ...createThemeSlice(...args),
+        ...createCountdownSlice(...args),
+        ...createMainSlice(...args),
+      };
+    },
     {
       name: 'crypto-guessr-store',
       storage: createJSONStorage(() => localStorage),
-      version: 2,
-      partialize: state => {
-        const {
-          countdown,
-          anonymousId,
-          theme,
-          selectedCurrency,
-          selectedCrypto,
-          direction,
-        } = state;
-        return {
-          direction,
-          countdown,
-          anonymousId,
-          theme,
-          selectedCurrency,
-          selectedCrypto,
-        };
-      },
+      version,
+      partialize: state => ({
+        countdown: state.countdown,
+        anonymousId: state.anonymousId,
+        theme: state.theme,
+        selectedCurrency: state.selectedCurrency,
+        selectedCrypto: state.selectedCrypto,
+      }),
     },
   ),
 );
