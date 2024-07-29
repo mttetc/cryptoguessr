@@ -6,7 +6,9 @@ import { ComponentPropsWithoutRef } from 'react';
 import Skeleton from '@/components/skeleton';
 
 const CryptoDisplay = (props: ComponentPropsWithoutRef<'div'>) => {
-  const { selectedCrypto, selectedCurrency } = useStore();
+  const selectedCrypto = useStore(state => state.selectedCrypto);
+  const selectedCurrency = useStore(state => state.selectedCurrency);
+
   const { data: cryptoPrice = 0, isLoading } = useReadCryptoPrice({
     params: { crypto: selectedCrypto, currency: selectedCurrency },
   });

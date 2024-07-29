@@ -11,7 +11,8 @@ import useStore from '@/store';
 import { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
 
 const CurrencyDropdown = (props: DropdownMenuProps) => {
-  const { selectedCurrency, setSelectedCurrency } = useStore();
+  const selectedCurrency = useStore(state => state.selectedCurrency);
+  const setSelectedCurrency = useStore(state => state.setSelectedCurrency);
 
   const handleSelectCurrency = (currency: Currency) => () => {
     setSelectedCurrency(currency);

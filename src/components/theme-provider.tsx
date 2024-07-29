@@ -2,7 +2,7 @@ import useStore from '@/store';
 import { useEffect } from 'react';
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const { theme } = useStore();
+  const theme = useStore(state => state.theme);
 
   useEffect(() => {
     const root = window.document.documentElement;

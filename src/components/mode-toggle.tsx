@@ -10,7 +10,7 @@ import useStore from '@/store';
 import { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
 
 const ModeToggle = (props: DropdownMenuProps) => {
-  const { setTheme } = useStore();
+  const setTheme = useStore(state => state.setTheme);
 
   const handleSelectTheme = (theme: 'light' | 'dark' | 'system') => () => {
     setTheme(theme);

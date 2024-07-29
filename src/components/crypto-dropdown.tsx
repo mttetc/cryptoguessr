@@ -11,7 +11,8 @@ import useStore from '@/store';
 import { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
 
 const CryptoDropdown = (props: DropdownMenuProps) => {
-  const { selectedCrypto, setSelectedCrypto } = useStore();
+  const selectedCrypto = useStore(state => state.selectedCrypto);
+  const setSelectedCrypto = useStore(state => state.setSelectedCrypto);
 
   const handleSelectCrypto = (crypto: Crypto) => () => {
     setSelectedCrypto(crypto);
