@@ -32,7 +32,6 @@ const useStore = create<BoundStore>()(
       storage: createJSONStorage(() => localStorage),
       version,
       partialize: state => ({
-        countdown: state.countdown,
         anonymousId: state.anonymousId,
         theme: state.theme,
         selectedCurrency: state.selectedCurrency,

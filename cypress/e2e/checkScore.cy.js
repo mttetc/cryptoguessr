@@ -1,5 +1,7 @@
 /// <reference types="cypress" />
 
+import { waitForCountdownToFinish } from '../support/commands';
+
 describe('GuessBox Score Check Test', () => {
   beforeEach(() => {
     cy.visit('/');
@@ -24,20 +26,20 @@ describe('GuessBox Score Check Test', () => {
         });
       });
 
-    cy.fixture('newScore.json').then(newScore => {
-      cy.intercept(
-        'PATCH',
-        'https://wn63ai4yyb.execute-api.eu-west-3.amazonaws.com/dev/scores/someid',
-        {
-          statusCode: 200,
-          body: newScore,
-        },
-      ).as('updateScore');
-    });
-
     cy.get('[data-testid="guess-box-button-up"]').click();
     cy.get('[data-testid="guess-box-countdown"]').should('be.visible');
-    cy.wait('@updateScore');
-    cy.get('[data-testid="score"]').should('have.text', '1');
+    waitForCountdownToFinish().then(() => {
+      cy.fixture('newScore.json').then(newScore => {
+        cy.intercept(
+          'PATCH',
+          'https://wn63ai4yyb.execute-api.eu-west-3.amazonaws.com/dev/scores/someid',
+          {
+            statusCode: 200,
+            body: newScore,
+          },
+        );
+      });
+      cy.get('[data-testid="score"]').should('have.text', '1');
+    });
   });
 });

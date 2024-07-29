@@ -71,6 +71,5 @@ Cypress.Commands.add('resetStore', () => {
     .its('store')
     .then(store => {
       store.setCountdownActive(false);
-      store.setCountdown(60);
     });
 });
