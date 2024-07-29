@@ -1,4 +1,4 @@
-import GuessBox from '@/components/GuessBox/guess-box';
+import GuessBox from '@/components/GuessBox';
 import Layout from '@/components/layout';
 
 const Home = () => {
