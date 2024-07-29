@@ -10,7 +10,7 @@ import useStore from '@/store';
 import { useQueryClient } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
 import { act } from 'react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { expect } from 'vitest';
 
 vi.mock('nanoid', () => ({ nanoid: vi.fn(() => 'nanoid') }));
 vi.mock('@tanstack/react-query', () => ({

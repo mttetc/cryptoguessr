@@ -10,7 +10,7 @@
   ],
   "compilerOptions": {
     "baseUrl": ".",
-    "types": ["vitest/jsdom", "vitest/globals"],
+    "types": ["vitest/globals", "vitest", "cypress"],
     "paths": {
       "@/*": ["./src/*"]
     }

@@ -7,7 +7,7 @@ import {
   screen,
   waitFor,
 } from '@testing-library/react';
-import { describe, expect } from 'vitest';
+import { expect } from 'vitest';
 
 describe('GuessBox', () => {
   test('should show countdown element when countdown is started', async () => {

@@ -8,7 +8,7 @@ import {
 } from '@/helpers';
 import { toast } from 'sonner';
 import { QueryClient } from '@tanstack/react-query';
-import { describe, expect, it } from 'vitest';
+import { expect } from 'vitest';
 
 vi.mock('sonner', () => ({
   toast: {
