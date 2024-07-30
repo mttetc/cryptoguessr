@@ -6,6 +6,8 @@ import { useCallback, useRef, useState } from 'react';
 const useCountdown = () => {
   const [countdown, setCountdown] = useState(COUNTDOWN);
   const setCountdownActive = useStore(state => state.setCountdownActive);
+  const setDirection = useStore(state => state.setDirection);
+
   const { onScoreUpdate } = useScore();
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -13,6 +15,7 @@ const useCountdown = () => {
   const startCountdown = useCallback(
     (direction: 'up' | 'down') => {
       setCountdownActive(true);
+      setDirection(direction);
 
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -23,6 +26,7 @@ const useCountdown = () => {
           if (prev === 0) {
             onScoreUpdate(direction);
             setCountdownActive(false);
+            setDirection(undefined);
             clearInterval(intervalRef.current!);
             return COUNTDOWN;
           }
@@ -30,7 +34,7 @@ const useCountdown = () => {
         });
       }, COUNTDOWN_INTERVAL * 1000);
     },
-    [setCountdown, setCountdownActive, onScoreUpdate],
+    [setCountdown, setDirection, setCountdownActive, onScoreUpdate],
   );
 
   return { countdown, startCountdown };
