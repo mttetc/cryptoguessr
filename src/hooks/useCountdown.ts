@@ -1,10 +1,10 @@
 import { COUNTDOWN, COUNTDOWN_INTERVAL } from '@/consts';
 import useScore from '@/hooks/useScore';
 import useStore from '@/store';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef } from 'react';
 
 const useCountdown = () => {
-  const [countdown, setCountdown] = useState(COUNTDOWN);
+  const setCountdown = useStore(state => state.setCountdown);
   const setCountdownActive = useStore(state => state.setCountdownActive);
   const setDirection = useStore(state => state.setDirection);
 
@@ -37,7 +37,7 @@ const useCountdown = () => {
     [setCountdown, setDirection, setCountdownActive, onScoreUpdate],
   );
 
-  return { countdown, startCountdown };
+  return { startCountdown };
 };
 
 export default useCountdown;

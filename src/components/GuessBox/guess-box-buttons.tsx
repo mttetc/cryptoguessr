@@ -1,22 +1,20 @@
+import { Button } from '@/components/ui/button';
+import useCountdown from '@/hooks/useCountdown';
 import useStore from '@/store';
 import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react';
 import { ComponentPropsWithoutRef } from 'react';
-import { Button } from '@/components/ui/button';
 
-type GuessBoxButtonsProps = {
-  onGuess: (direction: 'up' | 'down') => void;
-} & ComponentPropsWithoutRef<'div'>;
-
-const GuessBoxButtons = ({ onGuess, ...restProps }: GuessBoxButtonsProps) => {
+const GuessBoxButtons = (props: ComponentPropsWithoutRef<'div'>) => {
+  const { startCountdown } = useCountdown();
   const isCountdownActive = useStore(state => state.isCountdownActive);
   const direction = useStore(state => state.direction);
 
   const handleGuess = (direction: 'up' | 'down') => () => {
-    onGuess(direction);
+    startCountdown(direction);
   };
 
   return (
-    <div className="flex justify-center gap-2" {...restProps}>
+    <div className="flex justify-center gap-2" {...props}>
       <div
         className={`border-2 rounded-lg ${direction === 'up' ? 'border-primary' : 'border-transparent'}`}
       >

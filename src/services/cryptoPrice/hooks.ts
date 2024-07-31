@@ -18,7 +18,6 @@ export const useReadCryptoPrice = ({
   return useQuery<number, Error, number>({
     queryFn: () => readCryptoPrice(params),
     queryKey: cryptoPriceKeys.list(params),
-    retry: false,
     refetchOnWindowFocus: false,
     ...options,
   });

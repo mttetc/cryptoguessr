@@ -25,8 +25,6 @@ export const useReadScore = (
   return useQuery<ReadScoreResponse, Error, ReadScoreResponse>({
     queryFn: () => readScore(id!),
     queryKey: scoresKeys.list({ id: id! }),
-    retry: false,
-    refetchOnWindowFocus: false,
     ...options,
     enabled: !!id,
   });
