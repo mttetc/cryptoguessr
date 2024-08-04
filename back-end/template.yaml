@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Resources:
-  MyLambdaFunction:
+  ScoresLambda:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: app.lambdaHandler
@@ -12,3 +12,7 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME: scores
+      Events:
+        ScoresApi:
+          Type: 'Api'
+

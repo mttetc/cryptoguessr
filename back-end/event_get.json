@@ -2,6 +2,6 @@
   "httpMethod": "GET",
   "resource": "/scores/{id}",
   "pathParameters": {
-    "id": "123"
+    "id": "someid"
   }
 }
