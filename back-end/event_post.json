@@ -1,0 +1,13 @@
+{
+  "body": "{\"id\": \"123\", \"score\": 100}",
+  "resource": "/scores",
+  "path": "/scores",
+  "httpMethod": "POST",
+  "isBase64Encoded": false,
+  "queryStringParameters": null,
+  "pathParameters": null,
+  "stageVariables": null,
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}

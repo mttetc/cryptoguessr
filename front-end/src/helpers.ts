@@ -1,9 +1,9 @@
-import { QueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
 import { CURRENCY_TO_LOCALE_MAPPING } from '@/consts';
 import { cryptoPriceKeys } from '@/services/cryptoPrice/queryKeys';
 import { Currency } from '@/services/cryptoPrice/types';
 import useStore from '@/store';
+import { QueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 export const formatCurrency = (
   amount: number,
@@ -95,33 +95,4 @@ export const getConfirmationToast = ({
     position: 'bottom-center',
     description: 'You guessed right, keep it up!',
   });
-};
-
-export const getNewScore = async ({
-  score,
-  cryptoPrice,
-  queryClient,
-  direction,
-}: {
-  score: number;
-  cryptoPrice: number;
-  queryClient: QueryClient;
-  direction: 'up' | 'down';
-}) => {
-  await invalidateCryptoPrice({
-    queryClient,
-  });
-
-  const updatedPrice = getCryptoPrice({
-    queryClient,
-  });
-
-  const newScore = calculateNewScore({
-    updatedPrice,
-    currentScore: score,
-    price: cryptoPrice,
-    direction,
-  });
-
-  return newScore;
 };

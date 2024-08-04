@@ -1,0 +1,15 @@
+{
+  "body": "{\"score\": 200}",
+  "resource": "/scores/{id}",
+  "path": "/scores/123",
+  "httpMethod": "PATCH",
+  "isBase64Encoded": false,
+  "queryStringParameters": null,
+  "pathParameters": {
+    "id": "123"
+  },
+  "stageVariables": null,
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}

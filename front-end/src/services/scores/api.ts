@@ -54,15 +54,18 @@ export const createScore = async (payload: CreateScorePayload) => {
   return parsedRes.data;
 };
 
-export const updateScore = async (payload: UpdateScorePayload) => {
-  const url = `https://wn63ai4yyb.execute-api.eu-west-3.amazonaws.com/dev/scores/${payload.id}`;
+export const updateScore = async ({
+  id,
+  ...restPayload
+}: UpdateScorePayload) => {
+  const url = `https://wn63ai4yyb.execute-api.eu-west-3.amazonaws.com/dev/scores/${id}`;
 
   const response = await fetch(url, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(restPayload),
   });
 
   if (!response.ok) {

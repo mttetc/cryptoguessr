@@ -1,0 +1,7 @@
+{
+  "httpMethod": "GET",
+  "resource": "/scores/{id}",
+  "pathParameters": {
+    "id": "123"
+  }
+}

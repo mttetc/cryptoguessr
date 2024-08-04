@@ -51,45 +51,9 @@ export const useCreateScore = (
   >({
     mutationFn: createScore,
     ...options,
-    onMutate: async variables => {
-      if (options?.onMutate) {
-        options.onMutate(variables);
-      }
-
-      await queryClient.cancelQueries({
-        queryKey: scoresKeys.list({ id: variables.id }),
-      });
-
-      const previousScore = queryClient.getQueryData<CreateScoreResponse>(
-        scoresKeys.list({ id: variables.id }),
-      );
-
-      queryClient.setQueryData<ReadScoreResponse>(
-        scoresKeys.list({ id: variables.id }),
-        {
-          ...previousScore,
-          score: variables.score,
-        },
-      );
-
-      return previousScore;
-    },
-    onError: (err, variables, context) => {
-      if (context) {
-        queryClient.setQueryData(
-          scoresKeys.list({ id: variables.id }),
-          context,
-        );
-      }
-
-      if (options?.onError) {
-        options.onError(err, variables, context);
-      }
-    },
     onSettled: async (...args) => {
-      const { id } = args[2];
       queryClient.invalidateQueries({
-        queryKey: scoresKeys.list({ id }),
+        queryKey: scoresKeys.lists(),
       });
       if (options?.onSettled) await options.onSettled(...args);
     },
@@ -117,45 +81,9 @@ export const useUpdateScore = (
   >({
     mutationFn: updateScore,
     ...options,
-    onMutate: async variables => {
-      if (options?.onMutate) {
-        options.onMutate(variables);
-      }
-
-      await queryClient.cancelQueries({
-        queryKey: scoresKeys.list({ id: variables.id }),
-      });
-
-      const previousScore = queryClient.getQueryData<UpdateScoreResponse>(
-        scoresKeys.list({ id: variables.id }),
-      );
-
-      queryClient.setQueryData<ReadScoreResponse>(
-        scoresKeys.list({ id: variables.id }),
-        {
-          ...previousScore,
-          score: variables.score,
-        },
-      );
-
-      return previousScore;
-    },
-    onError: (err, variables, context) => {
-      if (context) {
-        queryClient.setQueryData(
-          scoresKeys.list({ id: variables.id }),
-          context,
-        );
-      }
-
-      if (options?.onError) {
-        options.onError(err, variables, context);
-      }
-    },
     onSettled: async (...args) => {
-      const { id } = args[2];
       queryClient.invalidateQueries({
-        queryKey: scoresKeys.list({ id }),
+        queryKey: scoresKeys.lists(),
       });
       if (options?.onSettled) await options.onSettled(...args);
     },
