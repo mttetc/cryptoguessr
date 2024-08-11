@@ -1,8 +1,8 @@
 # Crypto Guessr
 
-This app uses React, Typescript, Shadcn, Zustand, Tanstack Query, Vite, Cypress, Binance API & an AWS backend.
+This app uses React, Typescript, Shadcn, Zustand, Tanstack Query, Vite, Cypress, Binance API, AWS lambda, AWS dynamoDB, AWS api gateway, SAM.
 
-Link : https://main.d3kr8yf5x1pg0n.amplifyapp.com/
+Link : https://main.d2xcbwz138rr7q.amplifyapp.com/
 
 ## How to Launch the App
 
