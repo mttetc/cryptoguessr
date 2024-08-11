@@ -19,4 +19,4 @@ export const createScorePayloadSchema = payloadSchema.omit({ id: true });
 export const createScoreResponseSchema = scoreSchema;
 
 export const updateScorePayloadSchema = payloadSchema;
-export const updateScoreResponseSchema = scoreSchema;
+export const updateScoreResponseSchema = z.object({ score: z.number() });

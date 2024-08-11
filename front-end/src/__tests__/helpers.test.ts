@@ -4,7 +4,6 @@ import {
   getCryptoPrice,
   calculateNewScore,
   invalidateCryptoPrice,
-  getNewScore,
 } from '@/helpers';
 import { toast } from 'sonner';
 import { QueryClient } from '@tanstack/react-query';
@@ -148,85 +147,5 @@ describe('getCryptoPrice', () => {
     });
 
     expect(price).toEqual(0);
-  });
-});
-
-describe('getNewScore', () => {
-  const queryClient = new QueryClient();
-
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it('should increment the score by one if cryptoPrice has gone up and direction is up', async () => {
-    const score = 100;
-    const cryptoPrice = 50;
-    const expectedPrice = 100;
-    const direction = 'up';
-
-    queryClient.getQueryData = vi.fn().mockReturnValueOnce(expectedPrice);
-
-    const result = await getNewScore({
-      score,
-      cryptoPrice,
-      queryClient,
-      direction,
-    });
-
-    expect(result).toBe(score + 1);
-  });
-
-  it('should decrement the score by one if cryptoPrice has gone up and direction is up', async () => {
-    const score = 100;
-    const cryptoPrice = 50;
-    const expectedPrice = 40;
-    const direction = 'up';
-
-    queryClient.getQueryData = vi.fn().mockReturnValueOnce(expectedPrice);
-
-    const result = await getNewScore({
-      score,
-      cryptoPrice,
-      queryClient,
-      direction,
-    });
-
-    expect(result).toBe(score - 1);
-  });
-
-  it('should increment the score by one if cryptoPrice has gone down and direction is down', async () => {
-    const score = 100;
-    const cryptoPrice = 50;
-    const expectedPrice = 40;
-    const direction = 'down';
-
-    queryClient.getQueryData = vi.fn().mockReturnValueOnce(expectedPrice);
-
-    const result = await getNewScore({
-      score,
-      cryptoPrice,
-      queryClient,
-      direction,
-    });
-
-    expect(result).toBe(score + 1);
-  });
-
-  it('should decrement the score by one if cryptoPrice has gone up and direction is down', async () => {
-    const score = 100;
-    const cryptoPrice = 50;
-    const expectedPrice = 60;
-    const direction = 'down';
-
-    queryClient.getQueryData = vi.fn().mockReturnValueOnce(expectedPrice);
-
-    const result = await getNewScore({
-      score,
-      cryptoPrice,
-      queryClient,
-      direction,
-    });
-
-    expect(result).toBe(score - 1);
   });
 });

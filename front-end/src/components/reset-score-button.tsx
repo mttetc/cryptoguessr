@@ -4,7 +4,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { useReadScore, useUpdateScore } from '@/services/scores/hooks';
+import { useResetScore, useReadScore } from '@/services/scores/hooks';
 import useStore from '@/store';
 import { AnimatePresence, motion } from 'framer-motion';
 import { RefreshCcw } from 'lucide-react';
@@ -20,13 +20,13 @@ type ResetScoreButtonProps = {
 
 const ResetScoreButton = ({ anonymousId }: ResetScoreButtonProps) => {
   const { data = { score: 0 } } = useReadScore(anonymousId);
-  const { mutate: updateScore } = useUpdateScore();
+  const { mutate: resetScore } = useResetScore();
   const isCountdownActive = useStore(state => state.isCountdownActive);
 
   const isButtonVisible = data.score > 0;
 
   const handleReset = () => {
-    updateScore({ id: anonymousId, score: 0 });
+    resetScore(anonymousId);
   };
 
   return (

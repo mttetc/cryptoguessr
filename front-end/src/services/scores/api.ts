@@ -10,7 +10,7 @@ import {
 } from '@/services/scores/types';
 
 export const readScore = async (id: string) => {
-  const url = `https://wn63ai4yyb.execute-api.eu-west-3.amazonaws.com/dev/scores/${id}`;
+  const url = `https://i34oy7qm0h.execute-api.eu-west-3.amazonaws.com/Prod/scores/${id}`;
 
   const response = await fetch(url);
 
@@ -30,7 +30,7 @@ export const readScore = async (id: string) => {
 
 export const createScore = async (payload: CreateScorePayload) => {
   const url =
-    'https://wn63ai4yyb.execute-api.eu-west-3.amazonaws.com/dev/scores/';
+    'https://i34oy7qm0h.execute-api.eu-west-3.amazonaws.com/Prod/scores/';
 
   const response = await fetch(url, {
     method: 'POST',
@@ -58,7 +58,7 @@ export const updateScore = async ({
   id,
   ...restPayload
 }: UpdateScorePayload) => {
-  const url = `https://wn63ai4yyb.execute-api.eu-west-3.amazonaws.com/dev/scores/${id}`;
+  const url = `https://i34oy7qm0h.execute-api.eu-west-3.amazonaws.com/Prod/scores/${id}`;
 
   const response = await fetch(url, {
     method: 'PATCH',
@@ -80,4 +80,23 @@ export const updateScore = async ({
   }
 
   return parsedRes.data;
+};
+
+export const resetScore = async (id: string) => {
+  const url = `https://i34oy7qm0h.execute-api.eu-west-3.amazonaws.com/Prod/scores/${id}/reset`;
+
+  const response = await fetch(url, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to reset score');
+  }
+
+  const data = await response.json();
+
+  return data;
 };

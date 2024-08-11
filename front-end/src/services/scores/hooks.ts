@@ -1,11 +1,9 @@
 import {
-  useMutation,
-  UseMutationOptions,
-  useQuery,
-  useQueryClient,
-  UseQueryOptions,
-} from '@tanstack/react-query';
-import { createScore, readScore, updateScore } from '@/services/scores/api';
+  createScore,
+  readScore,
+  resetScore,
+  updateScore,
+} from '@/services/scores/api';
 import { scoresKeys } from '@/services/scores/queryKeys';
 import {
   CreateScorePayload,
@@ -14,6 +12,14 @@ import {
   UpdateScorePayload,
   UpdateScoreResponse,
 } from '@/services/scores/types';
+import {
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+  useQueryClient,
+  UseQueryOptions,
+} from '@tanstack/react-query';
+import { cryptoPriceKeys } from '../cryptoPrice/queryKeys';
 
 export const useReadScore = (
   id: string | undefined,
@@ -55,6 +61,9 @@ export const useCreateScore = (
       queryClient.invalidateQueries({
         queryKey: scoresKeys.lists(),
       });
+      queryClient.invalidateQueries({
+        queryKey: cryptoPriceKeys.lists(),
+      });
       if (options?.onSettled) await options.onSettled(...args);
     },
   });
@@ -80,6 +89,26 @@ export const useUpdateScore = (
     UpdateScoreResponse
   >({
     mutationFn: updateScore,
+    ...options,
+    onSettled: async (...args) => {
+      queryClient.invalidateQueries({
+        queryKey: scoresKeys.lists(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: cryptoPriceKeys.lists(),
+      });
+      if (options?.onSettled) await options.onSettled(...args);
+    },
+  });
+};
+
+export const useResetScore = (
+  options?: Omit<UseMutationOptions<void, Error, string, void>, 'mutationFn'>,
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, string, void>({
+    mutationFn: resetScore,
     ...options,
     onSettled: async (...args) => {
       queryClient.invalidateQueries({
