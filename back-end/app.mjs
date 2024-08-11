@@ -19,6 +19,7 @@ import {
   UpdateCommand,
 } from '@aws-sdk/lib-dynamodb';
 import { nanoid } from 'nanoid';
+import fetch from 'node-fetch'; // Import node-fetch
 
 const client = new DynamoDBClient({});
 
@@ -27,9 +28,9 @@ const dynamo = DynamoDBDocumentClient.from(client);
 const tableName = 'scores';
 
 const getCurrentPrice = async (currency, crypto) => {
-  const response = await fetch(
-    `https://api.binance.com/api/v3/ticker/price?symbol=${crypto}${currency}`,
-  );
+  const symbol = `${crypto}${currency === 'USD' ? 'USDT' : currency}`;
+  const url = `https://api.binance.com/api/v3/ticker/price?symbol=${symbol}`;
+  const response = await fetch(url);
   const data = await response.json();
   return parseFloat(data.price);
 };
@@ -143,6 +144,38 @@ export const lambdaHandler = async event => {
         // Ensure the score does not go below 0
         updatedScore = Math.max(updatedScore, 0);
 
+        await dynamo.send(
+          new UpdateCommand({
+            TableName: tableName,
+            Key: {
+              id: event.pathParameters.id,
+            },
+            UpdateExpression: 'set score = :s',
+            ExpressionAttributeValues: {
+              ':s': updatedScore,
+            },
+          }),
+        );
+        body = { score: updatedScore };
+        break;
+      }
+      case 'PATCH /scores/{id}/reset': {
+        const getResult = await dynamo.send(
+          new GetCommand({
+            TableName: tableName,
+            Key: {
+              id: event.pathParameters.id,
+            },
+          }),
+        );
+      
+        if (!getResult.Item) {
+          throw new Error(`Score with ID ${event.pathParameters.id} not found`);
+        }
+      
+        // Set the score to 0
+        const updatedScore = 0;
+      
         await dynamo.send(
           new UpdateCommand({
             TableName: tableName,

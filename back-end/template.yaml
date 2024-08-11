@@ -1,18 +1,251 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
+
 Resources:
-  ScoresLambda:
-    Type: 'AWS::Serverless::Function'
+  ApiGatewayRestApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: ScoresApi
+
+  ScoresApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: ScoresApi
+      StageName: Prod
+      DefinitionBody:
+        openapi: 3.0.1
+        info:
+          title: Scores API
+          description: API for managing scores
+          version: 1.0.0
+        paths:
+          /scores:
+            options:
+              summary: CORS support
+              x-amazon-apigateway-integration:
+                type: mock
+                requestTemplates:
+                  application/json: '{"statusCode": 200}'
+                responses:
+                  default:
+                    statusCode: '200'
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+                      method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                    responseTemplates:
+                      application/json: '{}'
+              responses:
+                '200':
+                  description: Default response for CORS method
+                  headers:
+                    Access-Control-Allow-Headers:
+                      schema:
+                        type: string
+                    Access-Control-Allow-Methods:
+                      schema:
+                        type: string
+                    Access-Control-Allow-Origin:
+                      schema:
+                        type: string
+            post:
+              summary: Create a new score
+              x-amazon-apigateway-integration:
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ScoresFunction.Arn}/invocations
+                httpMethod: POST
+                type: aws_proxy
+              responses:
+                '200':
+                  description: Successful response
+                  headers:
+                    Access-Control-Allow-Origin:
+                      schema:
+                        type: string
+          /scores/{id}:
+            get:
+              summary: Get a score by ID
+              x-amazon-apigateway-integration:
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ScoresFunction.Arn}/invocations
+                httpMethod: POST
+                type: aws_proxy
+              responses:
+                '200':
+                  description: Successful response
+                  headers:
+                    Access-Control-Allow-Origin:
+                      schema:
+                        type: string
+            patch:
+              summary: Update a score by ID
+              x-amazon-apigateway-integration:
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ScoresFunction.Arn}/invocations
+                httpMethod: POST
+                type: aws_proxy
+              responses:
+                '200':
+                  description: Successful response
+                  headers:
+                    Access-Control-Allow-Origin:
+                      schema:
+                        type: string
+            options:
+              summary: CORS support
+              x-amazon-apigateway-integration:
+                type: mock
+                requestTemplates:
+                  application/json: '{"statusCode": 200}'
+                responses:
+                  default:
+                    statusCode: '200'
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+                      method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS,PATCH'"
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                    responseTemplates:
+                      application/json: '{}'
+              responses:
+                '200':
+                  description: Default response for CORS method
+                  headers:
+                    Access-Control-Allow-Headers:
+                      schema:
+                        type: string
+                    Access-Control-Allow-Methods:
+                      schema:
+                        type: string
+                    Access-Control-Allow-Origin:
+                      schema:
+                        type: string
+          /scores/{id}/reset:
+            patch:
+              summary: Reset a score by ID
+              x-amazon-apigateway-integration:
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ScoresFunction.Arn}/invocations
+                httpMethod: POST
+                type: aws_proxy
+              responses:
+                '200':
+                  description: Successful response
+                  headers:
+                    Access-Control-Allow-Origin:
+                      schema:
+                        type: string
+            options:
+              summary: CORS support
+              x-amazon-apigateway-integration:
+                type: mock
+                requestTemplates:
+                  application/json: '{"statusCode": 200}'
+                responses:
+                  default:
+                    statusCode: '200'
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+                      method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS,PATCH'"
+                      method.response.header.Access-Control-Allow-Origin: "'*'"
+                    responseTemplates:
+                      application/json: '{}'
+              responses:
+                '200':
+                  description: Default response for CORS method
+                  headers:
+                    Access-Control-Allow-Headers:
+                      schema:
+                        type: string
+                    Access-Control-Allow-Methods:
+                      schema:
+                        type: string
+                    Access-Control-Allow-Origin:
+                      schema:
+                        type: string
+
+  ScoresFunction:
+    Type: AWS::Serverless::Function
     Properties:
       Handler: app.lambdaHandler
       Runtime: nodejs20.x
-      CodeUri: .
-      MemorySize: 128
-      Timeout: 10
       Environment:
         Variables:
           TABLE_NAME: scores
       Events:
         ScoresApi:
-          Type: 'Api'
+          Type: Api
+          Properties:
+            Path: /scores/{id}
+            Method: get
+            RestApiId:
+              Ref: ApiGatewayRestApi
+        ScoresApiPost:
+          Type: Api
+          Properties:
+            Path: /scores
+            Method: post
+            RestApiId:
+              Ref: ApiGatewayRestApi
+        ScoresApiPatch:
+          Type: Api
+          Properties:
+            Path: /scores/{id}
+            Method: patch
+            RestApiId:
+              Ref: ApiGatewayRestApi
+        ScoresApiReset:
+          Type: Api
+          Properties:
+            Path: /scores/{id}/reset
+            Method: patch
+            RestApiId:
+              Ref: ApiGatewayRestApi
+      Policies:
+        - Statement:
+            Effect: Allow
+            Action:
+              - dynamodb:GetItem
+              - dynamodb:PutItem
+              - dynamodb:UpdateItem
+            Resource:
+              Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/scores
 
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Ref: ScoresFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Sub: arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayRestApi}/*/GET/scores/{id}
+
+  LambdaInvokePermissionPost:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Ref: ScoresFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Sub: arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayRestApi}/*/POST/scores
+
+  LambdaInvokePermissionPatch:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Ref: ScoresFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Sub: arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayRestApi}/*/PATCH/scores/{id}
+
+  LambdaInvokePermissionReset:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Ref: ScoresFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Sub: arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayRestApi}/*/PATCH/scores/{id}/reset

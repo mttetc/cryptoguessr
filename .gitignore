@@ -29,9 +29,6 @@ dist-ssr/
 *.sln
 *.sw?
 
-# Documentation
-README.md
-
 # Test coverage
 coverage/
 
