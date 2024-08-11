@@ -3,7 +3,7 @@ import { ElementType } from 'react';
 import { cryptoSchema, currencySchema } from '@/services/cryptoPrice/schemas';
 import { Crypto, Currency } from '@/services/cryptoPrice/types';
 
-export const COUNTDOWN = 3;
+export const COUNTDOWN = 30;
 export const COUNTDOWN_INTERVAL = 1;
 export const cryptoOptions = cryptoSchema.options.map(crypto => crypto.value);
 export const currencyOptions = currencySchema.options.map(
