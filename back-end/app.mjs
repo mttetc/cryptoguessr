@@ -19,7 +19,7 @@ import {
   UpdateCommand,
 } from '@aws-sdk/lib-dynamodb';
 import { nanoid } from 'nanoid';
-import fetch from 'node-fetch'; // Import node-fetch
+import fetch from 'node-fetch';
 
 const client = new DynamoDBClient({});
 
@@ -46,15 +46,13 @@ export const lambdaHandler = async event => {
   };
 
   try {
-    // Determine the operation based on HTTP method and resource path
     const operation = `${event.httpMethod} ${event.resource}`;
 
     switch (operation) {
       case 'OPTIONS /scores/{id}':
       case 'OPTIONS /scores':
-        // Handle CORS preflight request
         statusCode = 200;
-        body = ''; // No need to return any body for OPTIONS
+        body = '';
         break;
       case 'GET /scores/{id}':
         body = await dynamo.send(
@@ -71,9 +69,8 @@ export const lambdaHandler = async event => {
         const { currency, crypto, price, direction } = JSON.parse(event.body);
         const currentPrice = await getCurrentPrice(currency, crypto);
 
-        // Fetch the current score from the database
         const id = nanoid();
-        let newScore = 0; // Default score if no previous score exists
+        let newScore = 0; 
 
         const getResult = await dynamo.send(
           new GetCommand({
@@ -95,7 +92,6 @@ export const lambdaHandler = async event => {
           newScore--;
         }
 
-        // Ensure the score does not go below 0
         newScore = Math.max(newScore, 0);
 
         await dynamo.send(
@@ -141,7 +137,6 @@ export const lambdaHandler = async event => {
           updatedScore--;
         }
 
-        // Ensure the score does not go below 0
         updatedScore = Math.max(updatedScore, 0);
 
         await dynamo.send(
@@ -173,7 +168,6 @@ export const lambdaHandler = async event => {
           throw new Error(`Score with ID ${event.pathParameters.id} not found`);
         }
       
-        // Set the score to 0
         const updatedScore = 0;
       
         await dynamo.send(
