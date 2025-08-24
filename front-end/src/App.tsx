@@ -5,7 +5,11 @@ import Providers from '@/components/providers';
 const App = () => {
   return (
     <Providers>
-      <BrowserRouter>
+      <BrowserRouter
+        basename={
+          process.env.NODE_ENV === 'production' ? '/cryptoguessr' : undefined
+        }
+      >
         <Routes>
           <Route path="/" element={<Home />} />
         </Routes>
